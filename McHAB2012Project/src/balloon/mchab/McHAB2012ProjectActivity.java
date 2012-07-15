@@ -1,15 +1,18 @@
 package balloon.mchab;
 
-import ioio.lib.api.DigitalOutput;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import ioio.lib.api.Uart;
 import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ToggleButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.os.Environment;
+import android.widget.Toast;
+import android.widget.CheckBox;
 
 /**
  * This is the main activity of the HelloIOIO example application.
@@ -20,8 +23,9 @@ import android.widget.TextView;
  * HelloIOIOPower example.
  */
 public class McHAB2012ProjectActivity extends IOIOActivity {
-	private ToggleButton button_;
-	
+	private CheckBox checkBox_onCreate;
+	private CheckBox checkBox_setup;
+	private CheckBox checkBox_looper;
 
 	/**
 	 * Called when the activity is first created. Here we normally initialize
@@ -30,8 +34,15 @@ public class McHAB2012ProjectActivity extends IOIOActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.main);	
 		
+		//Check box initiation
+		checkBox_onCreate = (CheckBox) findViewById(R.id.checkBox1);
+		checkBox_setup = (CheckBox) findViewById(R.id.checkBox2);
+		checkBox_looper = (CheckBox) findViewById(R.id.checkBox3);
+		
+		//Activate onCreate checkbox
+		checkBox_onCreate.setChecked(true);
 	}
 
 	/**
@@ -42,9 +53,7 @@ public class McHAB2012ProjectActivity extends IOIOActivity {
 	 * be called repetitively until the IOIO gets disconnected.
 	 */
 	class Looper extends BaseIOIOLooper {
-		/** The on-board LED. */
-		private DigitalOutput led_;
-
+	private Uart uart;
 		/**
 		 * Called every time a connection with IOIO has been established.
 		 * Typically used to open pins.
@@ -56,7 +65,7 @@ public class McHAB2012ProjectActivity extends IOIOActivity {
 		 */
 		@Override
 		protected void setup() throws ConnectionLostException {
-			led_ = ioio_.openDigitalOutput(0, true);
+
 		}
 
 		/**
@@ -69,10 +78,13 @@ public class McHAB2012ProjectActivity extends IOIOActivity {
 		 */
 		@Override
 		public void loop() throws ConnectionLostException {
-			led_.write(!button_.isChecked());
+			
+			checkBox_looper.setChecked(true);
+			checkBox_onCreate.setChecked(true);
 			
 			try {
 				Thread.sleep(100);
+				
 			} catch (InterruptedException e) {
 			}
 		}
@@ -87,4 +99,25 @@ public class McHAB2012ProjectActivity extends IOIOActivity {
 	protected IOIOLooper createIOIOLooper() {
 		return new Looper();
 	}
+	
+	public void generateNoteOnSD(String sFileName, String sBody){
+	    try
+	    {
+	        File root = new File(Environment.getExternalStorageDirectory(), "Notes");
+	        if (!root.exists()) {
+	            root.mkdirs();
+	        }
+	        File gpxfile = new File(root, sFileName);
+	        FileWriter writer = new FileWriter(gpxfile);
+	        writer.append(sBody);
+	        writer.flush();
+	        writer.close();
+	        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+	    }
+	    catch(IOException e)
+	    {
+	         e.printStackTrace();
+		     Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+	    }
+	   } 
 }
