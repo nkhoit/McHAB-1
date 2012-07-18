@@ -1,11 +1,24 @@
 package ioio.examples.hello;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+
 import ioio.lib.api.DigitalOutput;
+import ioio.lib.api.Uart;
 import ioio.lib.api.exception.ConnectionLostException;
 import ioio.lib.util.BaseIOIOLooper;
 import ioio.lib.util.IOIOLooper;
 import ioio.lib.util.android.IOIOActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 /**
@@ -18,7 +31,10 @@ import android.widget.ToggleButton;
  */
 public class MainActivity extends IOIOActivity {
 	private ToggleButton button_;
-
+	private CheckBox check1_;
+	private CheckBox check2_;
+	private CheckBox check3_;
+	private EditText edit1_;
 	/**
 	 * Called when the activity is first created. Here we normally initialize
 	 * our GUI.
@@ -27,7 +43,13 @@ public class MainActivity extends IOIOActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		button_ = (ToggleButton) findViewById(R.id.button);
+		button_ = (ToggleButton) findViewById(R.id.toggleButton1);
+		check1_ = (CheckBox) findViewById(R.id.checkBox1);
+		check2_ = (CheckBox) findViewById(R.id.checkBox2);
+		check3_ = (CheckBox) findViewById(R.id.checkBox3);
+		edit1_ = (EditText) findViewById(R.id.editText1);
+		
+		check1_.setChecked(true);
 	}
 
 	/**
@@ -40,7 +62,13 @@ public class MainActivity extends IOIOActivity {
 	class Looper extends BaseIOIOLooper {
 		/** The on-board LED. */
 		private DigitalOutput led_;
-
+		private Uart uart_;
+		private InputStream in_;
+		private File gpxfile;
+		private FileWriter gps_writer;
+		private byte[] buffer = new byte[1000]; 
+		private String gps_data;
+		
 		/**
 		 * Called every time a connection with IOIO has been established.
 		 * Typically used to open pins.
@@ -52,7 +80,28 @@ public class MainActivity extends IOIOActivity {
 		 */
 		@Override
 		protected void setup() throws ConnectionLostException {
+			check2_.setChecked(true);
+			
+			uart_ = ioio_.openUart(6, 7, 4800, Uart.Parity.NONE, Uart.StopBits.ONE);
+			in_ = uart_.getInputStream();
+			
 			led_ = ioio_.openDigitalOutput(0, true);
+			
+			//Set gps file path
+	        try {
+		        File root = new File(Environment.getExternalStorageDirectory(), "GPS_Data");
+		        
+		        if (!root.exists()) 
+		        {
+		            root.mkdirs();
+		        }
+		        
+		        gpxfile = new File(root, "dummy");
+				gps_writer = new FileWriter(gpxfile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		/**
@@ -65,12 +114,51 @@ public class MainActivity extends IOIOActivity {
 		 */
 		@Override
 		public void loop() throws ConnectionLostException {
+			check3_.setChecked(true);
+			
+			//GPS
+			try {
+				if(in_.available() > 0)	
+				{
+					in_.read(buffer);
+					gps_data =  new String(buffer, "US-ASCII");
+					setEditText(edit1_, gps_data);
+					generateNoteOnSD(gps_data);
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			//LED
 			led_.write(!button_.isChecked());
 			try {
-				Thread.sleep(100);
+				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 			}
 		}
+		
+		public void generateNoteOnSD(final String sBody)
+		{
+			runOnUiThread(new Runnable() 
+			{
+				@Override
+				public void run() 
+				{
+					try
+				    {
+				        gps_writer.append(sBody);
+				        gps_writer.flush();
+				    }
+				    catch(IOException e)
+				    {
+				         e.printStackTrace();
+				    }
+				}
+			});
+			
+
+		   }
 	}
 
 	/**
@@ -82,4 +170,15 @@ public class MainActivity extends IOIOActivity {
 	protected IOIOLooper createIOIOLooper() {
 		return new Looper();
 	}
+	
+	private void setEditText(final EditText edit, final String s) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				edit.setText(s);
+			}
+		});
+	}
+	
+  
 }
