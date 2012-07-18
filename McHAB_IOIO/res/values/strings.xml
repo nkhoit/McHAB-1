@@ -3,6 +3,6 @@
     <string name="app_name">McHAB_IOIO</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">McHAB_IOIO</string>
 
 </resources>
