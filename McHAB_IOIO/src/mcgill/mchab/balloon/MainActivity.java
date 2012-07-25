@@ -1,10 +1,13 @@
 package mcgill.mchab.balloon;
 
 import android.os.Bundle;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import ioio.lib.api.DigitalOutput;
 import ioio.lib.api.Uart;
@@ -47,7 +50,7 @@ public class MainActivity extends IOIOActivity {
 		
 		check1_.setChecked(true);
 	}
-
+	
 	/**
 	 * This is the thread on which all the IOIO activity happens. It will be run
 	 * every time the application is resumed and aborted when it is paused. The
@@ -60,9 +63,10 @@ public class MainActivity extends IOIOActivity {
 		private DigitalOutput led_;
 		private Uart uart_;
 		private InputStream in_;
+		private InputStreamReader inReader;
+		private BufferedReader buffReader;
 		private File gpxfile;
 		private FileWriter gps_writer;
-		private byte[] buffer = new byte[1000]; 
 		private String gps_data;
 		
 		/**
@@ -80,6 +84,9 @@ public class MainActivity extends IOIOActivity {
 			
 			uart_ = ioio_.openUart(6, 7, 4800, Uart.Parity.NONE, Uart.StopBits.ONE);
 			in_ = uart_.getInputStream();
+			inReader = new InputStreamReader(in_);
+			buffReader = new BufferedReader(inReader);
+
 			
 			led_ = ioio_.openDigitalOutput(0, true);
 			
@@ -116,8 +123,8 @@ public class MainActivity extends IOIOActivity {
 			try {
 				if(in_.available() > 0)	
 				{
-					in_.read(buffer);
-					gps_data =  new String(buffer, "US-ASCII");
+					gps_data = buffReader.readLine();
+					gps_data += "\n";
 					setEditText(edit1_, gps_data);
 					generateNoteOnSD(gps_data);
 				}
@@ -128,10 +135,13 @@ public class MainActivity extends IOIOActivity {
 			
 			//LED
 			led_.write(!button_.isChecked());
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
+			
+			try{
+				Thread.sleep(100);
+			}catch(InterruptedException e){
+				
 			}
+			
 		}
 		
 		public void generateNoteOnSD(final String sBody)
