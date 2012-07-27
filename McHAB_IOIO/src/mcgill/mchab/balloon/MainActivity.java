@@ -3,8 +3,6 @@ package mcgill.mchab.balloon;
 import android.os.Bundle;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,6 +17,8 @@ import android.os.Environment;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ToggleButton;
+
+import mcgill.mchab.balloon.SD_Card;
 
 /**
  * This is the main activity of the HelloIOIO example application.
@@ -63,10 +63,9 @@ public class MainActivity extends IOIOActivity {
 		private DigitalOutput led_;
 		private Uart uart_;
 		private InputStream in_;
-		private InputStreamReader inReader;
-		private BufferedReader buffReader;
-		private File gpxfile;
-		private FileWriter gps_writer;
+		private GPS_Manager gpsManager;
+		private SD_Card gps_sdWriter;
+		private GUI_Manager guiManager;
 		private String gps_data;
 		
 		/**
@@ -80,31 +79,17 @@ public class MainActivity extends IOIOActivity {
 		 */
 		@Override
 		protected void setup() throws ConnectionLostException {
-			check2_.setChecked(true);
+		    check2_.setChecked(true);
 			
+		    //Initialize GPS via uart
 			uart_ = ioio_.openUart(6, 7, 4800, Uart.Parity.NONE, Uart.StopBits.ONE);
 			in_ = uart_.getInputStream();
-			inReader = new InputStreamReader(in_);
-			buffReader = new BufferedReader(inReader);
-
+			gpsManager = new GPS_Manager(in_);
 			
 			led_ = ioio_.openDigitalOutput(0, true);
-			
-			//Set gps file path
-	        try {
-		        File root = new File(Environment.getExternalStorageDirectory(), "GPS_Data");
-		        
-		        if (!root.exists()) 
-		        {
-		            root.mkdirs();
-		        }
-		        
-		        gpxfile = new File(root, "dummy");
-				gps_writer = new FileWriter(gpxfile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		    gps_sdWriter = new SD_Card(Environment.getExternalStorageDirectory(), "GPS_DATA", "gps_data_1");
+		    guiManager = new GUI_Manager();
+		    
 		}
 
 		/**
@@ -116,55 +101,37 @@ public class MainActivity extends IOIOActivity {
 		 * @see ioio.lib.util.AbstractIOIOActivity.IOIOThread#loop()
 		 */
 		@Override
-		public void loop() throws ConnectionLostException {
+		public void loop() throws ConnectionLostException 
+		{
 			check3_.setChecked(true);
 			
 			//GPS
-			try {
-				if(in_.available() > 0)	
-				{
-					gps_data = buffReader.readLine();
-					gps_data += "\n";
-					setEditText(edit1_, gps_data);
-					generateNoteOnSD(gps_data);
-				}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			gps_data = gpsManager.readLine();
+			gps_sdWriter.generateNoteOnSD(gps_data);
 			
 			//LED
 			led_.write(!button_.isChecked());
 			
-			try{
+			
+			//GUI
+			//guiManager.setEditText(edit, text)
+			runOnUiThread(new Runnable()
+			{
+				public void run()
+				{
+					edit1_.setText(gps_data);
+				}
+			});
+			
+			try
+			{
 				Thread.sleep(100);
-			}catch(InterruptedException e){
+			} catch(InterruptedException e)
+			{
 				
 			}
 			
 		}
-		
-		public void generateNoteOnSD(final String sBody)
-		{
-			runOnUiThread(new Runnable() 
-			{
-				@Override
-				public void run() 
-				{
-					try
-				    {
-				        gps_writer.append(sBody);
-				        gps_writer.flush();
-				    }
-				    catch(IOException e)
-				    {
-				         e.printStackTrace();
-				    }
-				}
-			});
-			
-
-		   }
 	}
 
 	/**
@@ -175,16 +142,5 @@ public class MainActivity extends IOIOActivity {
 	@Override
 	protected IOIOLooper createIOIOLooper() {
 		return new Looper();
-	}
-	
-	private void setEditText(final EditText edit, final String s) {
-		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				edit.setText(s);
-			}
-		});
-	}
-	
-  
+	}  
 }
