@@ -1,9 +1,5 @@
 package mcgill.mchab.balloon;
 
-import ioio.lib.api.IOIO;
-import ioio.lib.api.Uart;
-import ioio.lib.api.exception.ConnectionLostException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
