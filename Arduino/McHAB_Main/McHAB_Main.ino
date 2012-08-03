@@ -42,7 +42,11 @@ LSM303 compass;
 //GPS
 SoftwareSerial mySerial(2,3);
 
+//Counter
+int counter = 0;
+
 void setup(){
+  
   Serial.begin(9600);
   Wire.begin();
 
@@ -55,17 +59,38 @@ void setup(){
     while (1);
   }
 
+  //GYRO
   gyro.enableDefault();
   
+  //COMPASS
   compass.init();
   compass.enableDefault();
+
+  // initialize timer1 
+  noInterrupts();           // disable all interrupts
+  TCCR1A = 0;
+  TCCR1B = 0;
+  TCNT1  = 0;
+
+  OCR1A = 3125;            // 10Hz --- 8Mhz / 266 
+  TCCR1B |= (1 << WGM12);   // CTC mode
+  TCCR1B |= (1 << CS12);    // 256 prescaler 
+  TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt
+  interrupts();             // enable all interrupts
   
   //GPS
-  mySerial.begin(4800);
+  //mySerial.begin(4800);
+}
+
+ISR(TIMER1_COMPA_vect)          // timer compare interrupt service routine
+{
+  Serial.println(counter);
+  counter++;
 }
 
 void loop()
 {
+  /*
   float temperature = bmp085GetTemperature(bmp085ReadUT()); //MUST be called first
   float pressure = bmp085GetPressure(bmp085ReadUP());
   float atm = pressure / 101325; // "standard atmosphere"
@@ -122,6 +147,7 @@ void loop()
   Serial.println();//line break
 
   delay(1000); //wait a second and get values again.
+  */
 }
 
 // Stores all of the bmp085's calibration values into global variables
