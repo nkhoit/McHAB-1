@@ -1,0 +1,39 @@
+------------------------------------------
+// ArduIMU Test Application Release Notes
+// HappyKillmore happy@happykillmore.com 
+------------------------------------------
+
+ArduIMUTest.exe v1.1.18 - Released October 9th, 2010
+ * Slowed draw routine for plane graphic to 40ms to help performance 
+ * NOTE: This tool is FAR more efficient parsing the Ascii messages from the ArduIMU
+         for best results use:
+         #define PRINT_DEBUG 0
+         #define PRINT_DCM 0      
+         #define PRINT_ANALOGS 0
+         #define PRINT_EULER 1
+         #define PRINT_GPS 1,
+         #define PRINT_BINARY 0
+         #define PERFORMANCE_REPORTING 0
+
+ArduIMUTest.exe v1.1.12 - Released April 30th, 2010
+ * Added support for binary protocol from ArduIMU v1.7
+ * Added performance data, magnetometer data, baraometer data and satellites to GPS data
+
+ArduIMUTest.exe v1.1.7 - Released December 3rd, 2009
+ * Fixed issue with 3D rendering that was causing X axis not to track correctly
+
+ArduIMUTest.exe v1.1.6 - Released November 24th, 2009
+ * Added ASDW support for X,Y movement of 3D Models
+ * Added Help, Instructions form
+
+ArduIMUTest.exe v1.1.5 - Released November 23rd, 2009
+ * Added support for +/- controls on soom of 3D models
+
+ArduIMUTest.exe v1.1.4 - Released November 20th, 2009
+ * Added menu for Auto Check for Update on startup
+ * Added menu for View Release Notes
+
+ArduIMUTest.exe v1.1.3 - Released November 20th, 2009
+ * Added Update routine
+ * Added setup and update WiseInstall
+ * Added Models selection (Cube - Default and Yellow Plane currently available)
