@@ -1,6 +1,5 @@
-// MPU6000 support for AruduIMU V3 --- This includes accelerometer and gyroscope
+// MPU6000 support for AruduIMU V3
 #include <SPI.h>
-#include <Arduino.h>
 
 #define MPU6000_CHIP_SELECT_PIN 4  // MPU6000 CHIP SELECT
 
@@ -56,25 +55,13 @@
 #define	BIT_I2C_IF_DIS              0x10
 
 // global variables
-extern volatile uint8_t MPU6000_newdata;
+volatile uint8_t MPU6000_newdata;
 
 //Sensor variables
-extern int accelX;
-extern int accelY;
-extern int accelZ;
+int accelX;
+int accelY;
+int accelZ;
 
-extern int gyroX;
-extern int gyroY;
-extern int gyroZ;
-
-byte MPU6000_SPI_read(byte reg);
-void MPU6000_SPI_write(byte reg, byte data);
-
-// MPU6000 INTERRUPT ON INT0
-void MPU6000_data_int();
-
-// MPU6000 Initialization and configuration
-void MPU6000_Init(void);
-
-// Read gyros and accel sensors on MPU6000
-void MPU6000_Read();
+int gyroX;
+int gyroY;
+int gyroZ;

@@ -9,10 +9,12 @@
 
 void readGPS();
 void initializeGPS();
+void getGPGGA();
 
 //variable declaration
 
 extern SoftwareSerial mySerial;
+extern bool dataReady;
 extern String gpsData;
-
+extern String gpgga;
 #endif
