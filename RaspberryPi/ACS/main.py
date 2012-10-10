@@ -11,7 +11,7 @@ import Matrix as m
 COM='/dev/ttyAMA0'
 BAUD=115200
 
-F_sample = 100
+F_sample = 50
 T_sample = 1.0/F_sample
 GYRO_FS = 1000 #16 bit register
 

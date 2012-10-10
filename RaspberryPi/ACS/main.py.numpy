@@ -13,7 +13,7 @@ import Matrix as m
 COM='/dev/ttyAMA0'
 BAUD=115200
 
-F_sample = 100
+F_sample = 50
 T_sample = 1.0/F_sample
 GYRO_FS = 1000 #16 bit register
 
@@ -77,24 +77,17 @@ if __name__ == '__main__':
 
             omega_hat = omega_measured+r
             omega_hat_mag = math.sqrt(omega_hat[0]**2+omega_hat[1]**2+omega_hat[2]**2)
+            omega_hat_mag_r = 1.0/omega_hat_mag
 
-            Ak = np.eye(3) - cross(omega_hat)*math.sin(omega_hat_mag*T_sample)/omega_hat_mag + (1-math.cos(omega_hat_mag*T_sample))*np.dot(cross(omega_hat),cross(omega_hat))/omega_hat_mag**2
+            Ak = np.eye(3) - cross(omega_hat)*math.sin(omega_hat_mag*T_sample)*omega_hat_mag_r + (1-math.cos(omega_hat_mag*T_sample))*np.dot(cross(omega_hat),cross(omega_hat))*omega_hat_mag_r**2
 
             Cbi_hat = np.dot(Ak,Cbi_hat)
-            det_Cbi_hat = np.linalg.det(Cbi_hat)
 
             #euler=tf.euler_from_matrix(Cbi_hat, axes='syxz')
             #euler=tuple([x*180/math.pi for x in euler])
 
-            #sys.stdout.write(str(Cbi_hat)+'\n')
-            #sys.stdout.flush()
-
-            current=time.time()*1000.0
-            counter+=1
-            if(current-initial>1000):
-                print 'Sampling Rate: ' + str(counter)
-                initial=current
-                counter=0
+            sys.stdout.write(str(Cbi_hat)+'\n')
+            sys.stdout.flush()
 
 
 
