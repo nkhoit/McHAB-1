@@ -8,7 +8,7 @@ import sys
 import time
 import Matrix as m
 
-COM='COM3'
+COM='/dev/ttyAMA0'
 BAUD=115200
 
 F_sample = 100
@@ -20,6 +20,9 @@ Cbi_hat = m.unit_matrix(3)
 g_i = m.Matrix([[0],[0],[-1]])
 
 b_d= m.Matrix([[0],[1],[0]])
+
+counter=0
+initial=time.time()*1000.0
 
 def change_frame(matrix):
     frame=m.Matrix([[-1,0,0],[0,-1,0],[0,0,-1]])
@@ -53,16 +56,12 @@ if __name__ == '__main__':
         line=ser.readline().rstrip()
         if(len(line)==18):
             line_u=struct.unpack('hhhhhhhhh', line)
-            #print str(line_u)
 
             raw_accel=m.Matrix([[line_u[0]],[line_u[1]],[line_u[2]]])
             norm_accel=normalize(raw_accel)
-            #c_accel=change_frame(norm_accel)
 
             raw_gyro=m.Matrix([[line_u[3]],[line_u[4]],[line_u[5]]])
             omega_measured=convert_gyro(raw_gyro)
-            #print str(omega_measured)
-            #omega_measured=normalize(raw_gyro)
 
             raw_magne=m.Matrix([[line_u[6]],[line_u[7]],[line_u[8]]])
             norm_magne=normalize(raw_magne)
@@ -74,13 +73,19 @@ if __name__ == '__main__':
 
             omega_hat = omega_measured+r
             omega_hat_mag = math.sqrt(omega_hat[(0,0)]**2+omega_hat[(1,0)]**2+omega_hat[(2,0)]**2)
+            omega_hat_mag_r = 1.0/omega_hat_mag
 
-            Ak = m.unit_matrix(3) - cross(omega_hat)*math.sin(omega_hat_mag*T_sample)*(1.0/omega_hat_mag) + (1-math.cos(omega_hat_mag*T_sample))*(cross(omega_hat)*cross(omega_hat))*(1.0/omega_hat_mag)**2
+            Ak = m.unit_matrix(3) - cross(omega_hat)*math.sin(omega_hat_mag*T_sample)*omega_hat_mag_r + (1-math.cos(omega_hat_mag*T_sample))*(cross(omega_hat)*cross(omega_hat))*omega_hat_mag_r**2
 
             Cbi_hat = Ak*Cbi_hat
 
-            sys.stdout.write(str(Cbi_hat)+'\n')
-            sys.stdout.flush()
+            current=time.time()*1000.0
+            counter+=1
+            if(current-initial>1000):
+                print 'Sampling Rate: ' + str(counter)
+                initial=current
+                counter=0
+
 
 
 

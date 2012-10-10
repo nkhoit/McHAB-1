@@ -1,7 +1,9 @@
+#!/usr/bin/python
+
 import serial
 import time
 
-COM='COM3'
+COM='/dev/ttyAMA0'
 BAUD=115200
 
 ser=serial.Serial(COM,BAUD,timeout=1)

@@ -10,7 +10,7 @@ import sys
 import time
 import Matrix as m
 
-COM='COM3'
+COM='/dev/ttyAMA0'
 BAUD=115200
 
 F_sample = 100
@@ -22,6 +22,9 @@ Cbi_hat = np.identity(3)
 g_i = np.array([0,0,-1])
 
 b_d= np.array([0,1,0])
+
+counter=0
+initial=time.time()*1000.0
 
 def change_frame(matrix):
     frame=np.array([-1,0,0],[0,-1,0],[0,0,-1])
@@ -80,11 +83,18 @@ if __name__ == '__main__':
             Cbi_hat = np.dot(Ak,Cbi_hat)
             det_Cbi_hat = np.linalg.det(Cbi_hat)
 
-            euler=tf.euler_from_matrix(Cbi_hat, axes='syxz')
-            euler=tuple([x*180/math.pi for x in euler])
+            #euler=tf.euler_from_matrix(Cbi_hat, axes='syxz')
+            #euler=tuple([x*180/math.pi for x in euler])
 
-            sys.stdout.write(str(Cbi_hat)+'\n')
-            sys.stdout.flush()
+            #sys.stdout.write(str(Cbi_hat)+'\n')
+            #sys.stdout.flush()
+
+            current=time.time()*1000.0
+            counter+=1
+            if(current-initial>1000):
+                print 'Sampling Rate: ' + str(counter)
+                initial=current
+                counter=0
 
 
 
