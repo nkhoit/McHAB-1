@@ -21,7 +21,9 @@ Cbi_hat = np.identity(3)
 
 g_i = np.array([0,0,-1])
 
-b_d= np.array([0,1,0])
+b_d = np.array([0.91651524 , 0.38360686 , 0.11333839])
+
+C_d = np.identity(3)
 
 counter=0
 initial=time.time()*1000.0
@@ -57,7 +59,7 @@ if __name__ == '__main__':
         if(len(line)==18):
             line_u=struct.unpack('hhhhhhhhh', line)
 
-            raw_accel=np.array([line_u[0],line_u[1],line_u[2]])
+            raw_accel=np.array([-line_u[0],-line_u[1],-line_u[2]])
             norm_accel=normalize(raw_accel)
 
             raw_gyro=np.array([line_u[3],line_u[4],line_u[5]])
@@ -78,13 +80,33 @@ if __name__ == '__main__':
 
             Ak = np.eye(3) - cross(omega_hat)*math.sin(omega_hat_mag*T_sample)*omega_hat_mag_r + (1-math.cos(omega_hat_mag*T_sample))*np.dot(cross(omega_hat),cross(omega_hat))*omega_hat_mag_r**2
 
-            Cbi_hat = np.dot(Ak,Cbi_hat)
+            Cbi_hat_new = np.dot(Ak,Cbi_hat)
 
-            #euler=tf.euler_from_matrix(Cbi_hat, axes='syxz')
-            #euler=tuple([x*180/math.pi for x in euler])
+            euler=tf.euler_from_matrix(Cbi_hat_new, axes='szyx')
+            euler=tuple([x*180/math.pi for x in euler])
 
-            sys.stdout.write(str(Cbi_hat)+'\n')
-            sys.stdout.flush()
+            #print str(euler)
+            print str(Cbi_hat)
+
+            b_body_d = np.dot(C_d,b_d.T)
+            g_body_d = np.dot(C_d,g_i.T)
+            #print str(b_body_d)+'\n'+str(g_body_d)
+
+            u_p = -0.05*(np.dot(cross(g_body_d),g_b.T) + np.dot(cross(b_body_d),b_b.T))
+            u_d = -0.05*omega_measured[2]
+
+            u_p = np.dot(np.dot(u_p,Cbi_hat),np.array([0,0,1]).T)
+
+            tau = u_d + u_p
+            #print str(tau)
+
+            Cbi_hat = Cbi_hat_new
+
+
+
+
+
+
 
 
 
