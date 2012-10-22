@@ -18,11 +18,8 @@ T_sample = 1.0/F_sample
 GYRO_FS = 1000 #16 bit register
 
 Cbi_hat = np.identity(3)
-
 g_i = np.array([0,0,-1])
-
 b_d = np.array([0.91651524 , 0.38360686 , 0.11333839])
-
 C_d = np.identity(3)
 
 counter=0
@@ -92,7 +89,7 @@ if __name__ == '__main__':
             g_body_d = np.dot(C_d,g_i.T)
             #print str(b_body_d)+'\n'+str(g_body_d)
 
-            u_p = -0.05*(np.dot(cross(g_body_d),g_b.T) + np.dot(cross(b_body_d),b_b.T))
+            u_p = 0.05*(np.dot(cross(g_body_d),g_b.T) + np.dot(cross(b_body_d),b_b.T))
             u_d = -0.05*omega_measured[2]
 
             u_p = np.dot(np.dot(u_p,Cbi_hat),np.array([0,0,1]).T)
