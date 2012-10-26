@@ -2,7 +2,7 @@ import socket
 import pygame
 import time
 
-ADDR = ('192.168.137.97',31092)
+ADDR = ('192.168.137.246',31092)
 
 pygame.init()
 j = pygame.joystick.Joystick(0)

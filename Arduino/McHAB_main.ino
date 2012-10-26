@@ -68,8 +68,8 @@ void loop()
 {
   currentTime = millis();
   
-  // 100Hz 
-  if(currentTime - timer1 >= 10)
+  // 50Hz 
+  if(currentTime - timer1 >= 20)
   {
     MPU6000_Read(accelX, accelY, accelZ, gyroX, gyroY, gyroZ);
     HMC5883_read(mag_x, mag_y, mag_z); 

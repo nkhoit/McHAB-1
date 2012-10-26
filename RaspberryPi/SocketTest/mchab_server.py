@@ -12,11 +12,19 @@ PORT=31092
 BUFFERSIZE=4096
 dac=MCP4725(0x60)
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(22,GPIO.OUT)
+
 class TCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         while True:
             data=self.request.recv(4096)
             convert=int(fabs(float(data))*4096)
+            if(convert<0):
+                convert=-convert
+                GPIO.output(22,GPIO.HIGH)
+            else:
+                GPIO.output(22,GPIO.LOW)
             dac.setVoltage(convert)
             print data,
 
