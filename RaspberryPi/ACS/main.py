@@ -123,7 +123,7 @@ if __name__ == '__main__':
 
                 ang_accel=tau/inertia
                 targ_speed=ang_accel*T_sample*4+cur_speed
-                dac.setSpeed(dac,targ_speed)
+                #setSpeed(dac,targ_speed)
                 cur_speed=targ_speed
 
                 counter=0
