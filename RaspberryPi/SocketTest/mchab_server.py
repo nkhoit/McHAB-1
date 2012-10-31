@@ -13,20 +13,23 @@ BUFFERSIZE=4096
 dac=MCP4725(0x60)
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(22,GPIO.OUT)
+GPIO.setup(18,GPIO.OUT)
 
 class TCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         while True:
-            data=self.request.recv(4096)
-            convert=int(fabs(float(data))*4096)
-            if(convert<0):
-                convert=-convert
-                GPIO.output(22,GPIO.HIGH)
+            try:
+                data=float(self.request.recv(4096))
+            except:
+                pass
+            print str(data)
+            if(data<0):
+                data=-data
+                GPIO.output(18,GPIO.HIGH)
             else:
-                GPIO.output(22,GPIO.LOW)
+                GPIO.output(18,GPIO.LOW)
+            convert=int(fabs(data)*4096/4)
             dac.setVoltage(convert)
-            print data,
 
 
 class TCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):

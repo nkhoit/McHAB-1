@@ -15,7 +15,7 @@ COM='/dev/ttyAMA0'
 BAUD=115200
 
 DAC_MAX = 4095
-F_sample = 50
+F_sample = 40
 T_sample = 1.0/F_sample
 GYRO_FS = 1000 #16 bit register
 drift=np.array([[-88], [20], [5]])
@@ -28,7 +28,7 @@ C_d = np.identity(3)
 counter=0
 initial=time.time()*1000.0
 cur_speed=0
-inertia=1
+inertia=0.000121
 
 def normalize(array):
     temp=math.sqrt(array[0][0]**2+array[1][0]**2+array[2][0]**2)
@@ -48,20 +48,23 @@ def parseData(line_u):
     raw_gyro=np.array([[line_u[3]],[line_u[4]],[line_u[5]]])-drift
     omega_measured=convert_gyro(raw_gyro)
 
-    raw_magne=np.array([[-line_u[6]],[-line_u[7]],[line_u[8]]])
+    raw_magne=np.array([[line_u[6]],[-line_u[7]],[-line_u[8]]])
     norm_magne=normalize(raw_magne)
 
+    #print norm_accel.T
     #print raw_gyro.T
+    #print norm_magne.T
     return norm_accel, omega_measured, norm_magne
 
 def setSpeed(dac,speed):
+    voltage=(speed*60/(2*math.pi)+39.019)/1890.0
     if(speed<0):
         GPIO.output(22, GPIO.LOW)
         speed=-speed
     else:
         GPIO.output(22, GPIO.HIGH)
 
-    dac.setVoltage(int(speed*DAC_MAX/5.0))
+    #dac.setVoltage(int(voltage*DAC_MAX/5.0))
 
 
 if __name__ == '__main__':
@@ -87,6 +90,7 @@ if __name__ == '__main__':
 
             if(firstRun):
                 b_d=np.array([[norm_magne[0][0]],[norm_magne[1][0]],[norm_magne[2][0]]])
+                g_i=np.array([[norm_accel[0][0]],[norm_accel[1][0]],[norm_accel[2][0]]])
                 firstRun=False
 
             b_b=np.dot(Cbi_hat,b_d)
@@ -102,11 +106,11 @@ if __name__ == '__main__':
 
             Cbi_hat_new = np.dot(Ak,Cbi_hat)
 
-            euler=tf.euler_from_matrix(Cbi_hat_new, axes='szyx')
-            euler=tuple([x*180/math.pi for x in euler])
+            euler=tf.euler_from_matrix(Cbi_hat_new.T, axes='szyx')
+            euler=tuple([x for x in euler])
 
             #setSpeed(dac,euler[0]*5.0/180.0)
-            print euler
+            #print euler
             #print str(Cbi_hat)
 
             counter+=1
@@ -114,16 +118,18 @@ if __name__ == '__main__':
                 b_body_d = np.dot(C_d,b_d)
                 g_body_d = np.dot(C_d,g_i)
 
-                u_p = -0.05*(np.dot(cross(g_body_d),g_b) + np.dot(cross(b_body_d),b_b))
-                u_d = -0.05*omega_measured[2][0]
+                #u_p = 0.05*(np.dot(cross(g_body_d),g_b) + np.dot(cross(b_body_d),b_b))
+                u_d = -0.01*omega_measured[2][0]
 
-                u_p = np.dot(np.dot(u_p.T,Cbi_hat),np.array([[0],[0],[1]]))
+                #u_p = np.dot(np.dot(u_p.T,Cbi_hat),np.array([[0],[0],[1]]))
+                u_p = -0.01*euler[0]
 
                 tau = u_d + u_p
+                #print str(1000*tau)
 
                 ang_accel=tau/inertia
                 targ_speed=ang_accel*T_sample*4+cur_speed
-                #setSpeed(dac,targ_speed)
+                setSpeed(dac,targ_speed)
                 cur_speed=targ_speed
 
                 counter=0
