@@ -1,4 +1,4 @@
-import Adafruit_I2C
+import I2C
 import time
 
 class LSM303:
@@ -84,30 +84,51 @@ class LSM303:
     _LSM303DLM_OUT_Y_L_M = 0x08
 
     def __init__(self, accel_address = _ACCEL_ADDRESS, mag_address = _MAG_ADDRESS):
-        self.accel = Adafruit_I2C.Adafruit_I2C(accel_address)
-        self.mag = Adafruit_I2C.Adafruit_I2C(mag_address)
+        self.accel = I2C.I2C(accel_address)
+        self.mag = I2C.I2C(mag_address)
 
     def enableDefault(self):
         #Enable Accelerometer
-        self.accel.write8(self._LSM303_CTRL_REG1_A, 0x3F)
+        self.accel.writeByte(self._LSM303_CTRL_REG1_A, 0x3F)
         #Enable Magnetometer
-        self.mag.write8(self._LSM303_MR_REG_M, 0x00)
+        self.mag.writeByte(self._LSM303_MR_REG_M, 0x00)
 
-    def readAccel(self):
-        xla = self.accel.readU8(self._LSM303_OUT_X_L_A)
-        xha = self.accel.readU8(self._LSM303_OUT_X_H_A)
-        yla = self.accel.readU8(self._LSM303_OUT_Y_L_A)
-        yha = self.accel.readU8(self._LSM303_OUT_Y_H_A)
-        zla = self.accel.readU8(self._LSM303_OUT_Z_L_A)
-        zha = self.accel.readU8(self._LSM303_OUT_Z_H_A)
+    def getRawAccel(self):
+        xla = self.accel.readByte(self._LSM303_OUT_X_L_A)
+        xha = self.accel.readByte(self._LSM303_OUT_X_H_A)
+        yla = self.accel.readByte(self._LSM303_OUT_Y_L_A)
+        yha = self.accel.readByte(self._LSM303_OUT_Y_H_A)
+        zla = self.accel.readByte(self._LSM303_OUT_Z_L_A)
+        zha = self.accel.readByte(self._LSM303_OUT_Z_H_A)
 
-        x=self.convertUtoS((xha<<8|xla)>>4)
-        y=self.convertUtoS((yha<<8|yla)>>4)
-        z=self.convertUtoS((zha<<8|zla)>>4)
+        data = [(xha<<8|xla)>>4, (yha<<8|yla)>>4,(zha<<8|zla)>>4]
+        for i in data:
+            if(i>2**12/2-1):
+                i-=2**12
 
-        return x,y,z
+        return data
 
-    def convertUtoS(self,num):
-        if(num>4096/2):
-            num=num-4096
-        return num
+    def getAccel(self):
+        data = self.getRawAccel()
+
+        for i in data:
+            i/=(2**12)/2 * 2
+
+        return data
+
+    def getRawMag(self):
+        xla = self.mag.readByte(self._LSM303_OUT_X_L_M)
+        xha = self.mag.readByte(self._LSM303_OUT_X_H_M)
+        yla = self.mag.readByte(self._LSM303_OUT_Y_L_M)
+        yha = self.mag.readByte(self._LSM303_OUT_Y_H_M)
+        zla = self.mag.readByte(self._LSM303_OUT_Z_L_M)
+        zha = self.mag.readByte(self._LSM303_OUT_Z_H_M)
+
+        data = [xha<<8|xla), yha<<8|yla,zha<<8|zla]
+        for i in data:
+            if(i>2**16/2-1):
+                i-=2**16
+
+        return data
+
+
