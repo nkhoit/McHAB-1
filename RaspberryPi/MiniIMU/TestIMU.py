@@ -13,9 +13,11 @@ if __name__ == '__main__':
 
     while(1):
         current=time.time()*1000.0
-        x,y,z=LSM.readRawAccel()
-        sys.stdout.write('\rX: %d, Y: %d, Z: %d' % (x,y,z))
-        sys.stdout.flush()
+        a_x,a_y,a_z=LSM.readRawAccel()
+        b_x,b_y,b_z=LSM.readRawMag()
+        #print 'Accel = X: %d, Y: %d, Z: %d' % (a_x,a_y,a_z)
+        print 'Mag   = X: %d, Y: %d, Z: %d' % (b_x,b_y,b_z)
+
 
         '''
         counter+=1
