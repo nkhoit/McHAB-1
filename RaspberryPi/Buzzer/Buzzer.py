@@ -9,7 +9,7 @@ class Buzzer:
 		GPIO.setup(pin_number, GPIO.OUT)
 		
 	def buzzer_loop(self, current_time, altitude):
-		if(!(current_time < start_time) && altitude < altitude_threshold):
+		#if(not (current_time < start_time) && altitude < altitude_threshold):
 			GPIO.output(pin_number, GPIO.HIGH)
 
 
