@@ -108,14 +108,6 @@ class LSM303:
 
         return data
 
-    def getAccel(self):
-        data = self.getRawAccel()
-
-        for i in data:
-            i/=(2**12)/2 * 2
-
-        return data
-
     def getRawMag(self):
         xla = self.mag.readByte(self._LSM303_OUT_X_L_M)
         xha = self.mag.readByte(self._LSM303_OUT_X_H_M)
@@ -126,7 +118,7 @@ class LSM303:
 
         data = [xha<<8|xla), yha<<8|yla,zha<<8|zla]
         for i in data:
-            if(i>2**16/2-1):
+            if(i>2**12/2-1):
                 i-=2**16
 
         return data
