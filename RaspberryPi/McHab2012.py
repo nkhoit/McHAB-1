@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import time
+import RPi.GPIO as GPIO
+from ImportDirectoryList import * #import all used directories
 
 #Constants: To do, change format
 data_read_time = 20 #50 Hz
@@ -13,17 +15,21 @@ previous_buzzer_time = 0
 previous_cut_time = 0
 
 if __name__ == '__main__':
+	#Initiate sensors and other codes to be ran before loop function
 	initiate()
+	
+	#Run the loop subroutine indefinitly
 	while(1):
 		loop()
 		
 
 def initiate():
 	#Sensor initialization and codes to be ran before loop
+	GPIO.setmode(GPIO.BCM)
 		
 def loop():
 	if(current_time - previous_data_read_time > data_read_time):
-		#Run data read subroutine
+		buzzer_loop() #Run data read subroutine
 		previous_data_read_time = current_time #reset timer
 	if(current_time - previous_buzzer_time > buzzer_time):
 		#Run buzzer subroutine

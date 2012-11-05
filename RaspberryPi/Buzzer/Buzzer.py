@@ -1,25 +1,15 @@
 #!/usr/bin/python
+import RPi.GPIO as GPIO
 
-import smbus
+class Buzzer:
+	start_time = 1800000 #30 minutes
+	altitude_threshold = 500 #500 meters
 
-class I2C:
-
-    def __init__(self, address, bus=smbus.SMBus(0)):
-        self.address=address
-        self.bus=bus
-
-    def writeByte(self, reg, value):
-        try:
-            self.bus.write_byte_data(self.address, reg, value)
-        except IOError, err:
-            print "Error accessing 0x%02X" % self.address
-            return -1
-
-    def readByte(self, reg):
-        try:
-            self.bus.read_byte_data(self.address, reg)
-        except IOError, err:
-            print "Error accessing 0x%02X" % self.address
-            return -1
+    def __init__(self, pin_number):
+		GPIO.setup(pin_number, GPIO.OUT)
+		
+	def buzzer_loop(self, current_time, altitude):
+		if(!(current_time < start_time) && altitude < altitude_threshold):
+			GPIO.output(pin_number, GPIO.HIGH)
 
 
