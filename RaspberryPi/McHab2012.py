@@ -21,9 +21,6 @@ class McHab2012:
 	def __init__(self):
 		#Create Buzzer Object
 		self.buzzer = Buzzer.Buzzer(25)
-	
-		#Sensor initialization and codes to be ran before loop
-		GPIO.setmode(GPIO.BCM)
 			
 	def loop(self):
 		if(self.current_time - self.previous_data_read_time > self.data_read_time):
