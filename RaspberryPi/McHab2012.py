@@ -19,12 +19,15 @@ class McHab2012:
 	previous_cut_time = 0
 
 	def __init__(self):
+		#Create Buzzer Object
+		self.buzzer = Buzzer.Buzzer(25)
+	
 		#Sensor initialization and codes to be ran before loop
 		GPIO.setmode(GPIO.BCM)
 			
 	def loop(self):
 		if(self.current_time - self.previous_data_read_time > self.data_read_time):
-			buzzer_loop() #Run data read subroutine
+			self.buzzer.loop() #Run data read subroutine
 			self.previous_data_read_time = self.current_time #reset timer
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
 			#Run buzzer subroutine
