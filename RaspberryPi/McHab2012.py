@@ -14,15 +14,6 @@ previous_data_read_time = 0
 previous_buzzer_time = 0
 previous_cut_time = 0
 
-if __name__ == '__main__':
-	#Initiate sensors and other codes to be ran before loop function
-	initiate()
-	
-	#Run the loop subroutine indefinitly
-	while(1):
-		loop()
-		
-
 def initiate():
 	#Sensor initialization and codes to be ran before loop
 	GPIO.setmode(GPIO.BCM)
@@ -37,5 +28,14 @@ def loop():
 	if(current_cut_time - previous_cut_time > cut_time):
 		#Run cut down subroutine
 		previous_cut_time = curent_time #reset timer
+
+if __name__ == '__main__':
+	#Initiate sensors and other codes to be ran before loop function
+	initiate()
+	
+	#Run the loop subroutine indefinitly
+	while(1):
+		loop()
+		
 
 
