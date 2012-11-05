@@ -1,7 +1,7 @@
 import I2C
 import time
 
-class LSM303:
+class LSM303DLM:
     #I2C addresses for LSM303
     _ACCEL_ADDRESS = 0x18
     _MAG_ADDRESS = 0x69
@@ -93,7 +93,7 @@ class LSM303:
         #Enable Magnetometer
         self.mag.writeByte(self._LSM303_MR_REG_M, 0x00)
 
-    def getRawAccel(self):
+    def readRawAccel(self):
         xla = self.accel.readByte(self._LSM303_OUT_X_L_A)
         xha = self.accel.readByte(self._LSM303_OUT_X_H_A)
         yla = self.accel.readByte(self._LSM303_OUT_Y_L_A)
@@ -108,7 +108,7 @@ class LSM303:
 
         return data
 
-    def getRawMag(self):
+    def readRawMag(self):
         xla = self.mag.readByte(self._LSM303_OUT_X_L_M)
         xha = self.mag.readByte(self._LSM303_OUT_X_H_M)
         yla = self.mag.readByte(self._LSM303_OUT_Y_L_M)
@@ -116,7 +116,7 @@ class LSM303:
         zla = self.mag.readByte(self._LSM303_OUT_Z_L_M)
         zha = self.mag.readByte(self._LSM303_OUT_Z_H_M)
 
-        data = [xha<<8|xla), yha<<8|yla,zha<<8|zla]
+        data = [xha<<8|xla, yha<<8|yla,zha<<8|zla]
         for i in data:
             if(i>2**12/2-1):
                 i-=2**16
