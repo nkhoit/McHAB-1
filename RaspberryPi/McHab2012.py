@@ -36,9 +36,6 @@ class McHab2012:
 if __name__ == '__main__':
 	mchab = McHab2012()
 	
-	#Initiate sensors and other codes to be ran before loop function
-	mchab.initiate()
-	
 	#Run the loop subroutine indefinitly
 	while(1):
 		mchab.loop()
