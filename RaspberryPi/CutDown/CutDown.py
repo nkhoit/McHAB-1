@@ -17,7 +17,7 @@ class CutDown:
 
 	def cut(self, current_time):
 		#if cut down time is reached, set the output to high for a short interval of time. If the line is cut, do not attempt to perform anymore cut.
-		if(self.status != 1 && current_time > self.cut_down_time):
+		if(self.status != 1 and current_time > self.cut_down_time):
 			#Start timer and turn on resistor 
 			if(self.previous_time == 0):
 				self.previous_time = current_time
