@@ -23,7 +23,8 @@ class Buzzer:
 			GPIO.output(self.pin, GPIO.LOW)
 			
 			
-	def beep_delay(self, current_time)
+	def beep_delay(self, current_time):
+		#Delay the beep for the self.delay amount
 		if(current_time - self.previous_time > self.delay):
 			if(self.toggle == 0):
 				toggle = 1 #set toggle to 1 for next iteration
