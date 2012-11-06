@@ -12,7 +12,7 @@ class McHab2012:
 	system_start_time = 3000 #3 seconds
 	data_read_time = 20 #50 Hz
 	buzzer_time = 60000 #1 minutes
-	cut_time = 30000 #0.5	 minutes 
+	cut_time = 10000 #0.5	 minutes 
 	buzzer_pin = 23 #GPIO pin 23
 	cut_down_pin = 18 #GPIO pin 18
 	buzzer_start_time = 1800000 #30 minutes
