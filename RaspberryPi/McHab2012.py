@@ -29,7 +29,7 @@ class McHab2012:
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
 			#Run buzzer subroutine
 			self.previous_buzzer_time = self.current_time #reset timer
-		if(self.current_cut_time - self.previous_cut_time > self.cut_time):
+		if(self.current_time - self.previous_cut_time > self.cut_time):
 			#Run cut down subroutine
 			self.previous_cut_time = self.curent_time #reset timer
 
