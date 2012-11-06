@@ -9,20 +9,22 @@ import Buzzer
 class McHab2012:
 	#Constants: To do, change format
 	data_read_time = 20 #50 Hz
-	buzzer_time = 60000 #1 minutes
+	buzzer_time = 1000 #1 minutes
 	cut_time = 200 #5 Hz
-
-	#Timer Variables
-	current_time = time.time()*1000.0
-	previous_data_read_time = 0
-	previous_buzzer_time = 0
-	previous_cut_time = 0
 
 	def __init__(self):
 		#Create Buzzer Object
 		self.buzzer = Buzzer.Buzzer(25)
+		
+		#Timer Variables
+		self.current_time = time.time()*1000.0
+		self.previous_data_read_time = 0
+		self.previous_buzzer_time = 0
+		self.previous_cut_time = 0
 			
 	def loop(self):
+		current_time = time.time()*1000.0 #Get current time
+	
 		if(self.current_time - self.previous_data_read_time > self.data_read_time):
 			self.buzzer.loop(1850000, 5) #Run data read subroutine
 			self.previous_data_read_time = self.current_time #reset timer
