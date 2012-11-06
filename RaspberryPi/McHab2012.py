@@ -12,22 +12,22 @@ class McHab2012:
 	system_start_time = 3000 #3 seconds
 	data_read_time = 20 #50 Hz
 	buzzer_time = 60000 #1 minutes
-	cut_time = 30000 #0.5 minutes 
-	buzzer_pin = 25 #GPIO pin 25
-	cut_down_pin = 0 #GPIO pin 0
+	cut_time = 30000 #0.5	 minutes 
+	buzzer_pin = 23 #GPIO pin 23
+	cut_down_pin = 18 #GPIO pin 18
 	buzzer_start_time = 1800000 #30 minutes
 	altitude_threshold = 500 #500 meters
 
-	def __init__(self):
-		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
-		self.CutDown = CutDown.CutDown(self.cut_down_pin, self.cut_time) #Create CutDown Object
-		
+	def __init__(self):		
 		#Timer Variables
 		self.current_time = time.time()*1000.0
 		self.previous_data_read_time = self.current_time
 		self.previous_buzzer_time = self.current_time
 		self.previous_cut_time = self.current_time
 		self.previous_display_time = self.current_time
+		
+		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.current_time, self.self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
+		self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
 		
 			
 	def loop(self):

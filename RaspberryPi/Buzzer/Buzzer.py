@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 class Buzzer:
 	delay = 1000 #1 second delay between beep
 
-	def __init__(self, pin_number, start_time, altitude_threshold):
+	def __init__(self, pin_number, current_time, start_time, altitude_threshold):
 		self.pin = pin_number
 		self.start_time = start_time
 		self.altitude_threshold = altitude_threshold
@@ -14,7 +14,7 @@ class Buzzer:
 		GPIO.output(pin_number, GPIO.LOW)
 		
 		self.toggle = 0 #Default toggle for delayed beeping. 0 = off, 1 = on
-		self.previous_time = 0 #Set previous time for delayed beeping
+		self.previous_time = current_time #Set previous time for delayed beeping
 		
 	def loop(self, current_time, altitude):
 		if(not (current_time < self.start_time) and altitude < self.altitude_threshold):

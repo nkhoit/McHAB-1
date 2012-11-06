@@ -4,10 +4,10 @@ import RPi.GPIO as GPIO
 class CutDown:
 	delay = 60000 #1 minutes
 
-	def __init__(self, pin_number, cut_down_time):
+	def __init__(self, current_time, pin_number, cut_down_time):
 		self.pin = pin_number #Set cut down GPIO pin
 		self.cut_down_time = cut_down_time #Set cut down time
-		self.previous_time = 0 #previous time. Used to time the amount of time to set the voltage high
+		self.previous_time = current_time #previous time. Used to time the amount of time to set the voltage high
 		self.status = 0 #current status of the cut down. 0 = idle 1 = wire is cut
 
 		#Setup GPIO
