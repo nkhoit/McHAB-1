@@ -28,7 +28,7 @@ class McHab2012:
 		
 		#timer offset
 		self.cut_time += self.current_time
-		self.buzzer_start_time += self.buzzer_self_time
+		self.buzzer_start_time += self.buzzer_start_time
 		
 		
 		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.current_time, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
