@@ -23,7 +23,7 @@ class McHab2012:
 		self.previous_cut_time = 0
 			
 	def loop(self):
-		current_time = time.time()*1000.0 #Get current time
+		self.current_time = time.time()*1000.0 #Get current time
 	
 		if(self.current_time - self.previous_data_read_time > self.data_read_time):
 			#Run data read subroutine
@@ -40,7 +40,6 @@ if __name__ == '__main__':
 	
 	#Run the loop subroutine indefinitly
 	while(1):
-		print "a"
 		mchab.loop()
 		
 
