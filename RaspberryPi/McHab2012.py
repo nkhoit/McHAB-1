@@ -26,10 +26,10 @@ class McHab2012:
 		current_time = time.time()*1000.0 #Get current time
 	
 		if(self.current_time - self.previous_data_read_time > self.data_read_time):
-			self.buzzer.loop(1850000, 5) #Run data read subroutine
+			#Run data read subroutine
 			self.previous_data_read_time = self.current_time #reset timer
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
-			#Run buzzer subroutine
+			self.buzzer.loop(1850000, 5) #Run buzzer subroutine
 			self.previous_buzzer_time = self.current_time #reset timer
 		if(self.current_time - self.previous_cut_time > self.cut_time):
 			#Run cut down subroutine
