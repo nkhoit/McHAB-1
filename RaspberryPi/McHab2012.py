@@ -28,8 +28,8 @@ class McHab2012:
 		
 		#timer offset
 		self.cut_time += self.current_time
-		self.buzzer_start_time += self.buzzer_start_time
-		
+		self.buzzer_start_time += self.current_time
+		self.system_start_time += self.current_time
 		
 		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.current_time, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
 		self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
@@ -44,7 +44,7 @@ class McHab2012:
 			self.previous_display_time = self.current_time
 	
 		#start up 
-		if(self.current_time < (self.current_time + self.system_start_time)):
+		if(self.current_time < self.system_start_time):
 			self.buzzer.beep_delay(self.current_time)
 			print "initial beep"
 	
