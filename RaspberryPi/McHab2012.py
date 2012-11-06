@@ -11,7 +11,8 @@ class McHab2012:
 	#Constants: To do, change format
 	system_start_time = 3000 #3 seconds
 	data_read_time = 20 #50 Hz
-	buzzer_time = 60000 #1 minutes
+	buzzer_time = 1000 #1 minutes
+	cut_timer = 1000
 	cut_time = 10000 #0.5	 minutes 
 	buzzer_pin = 23 #GPIO pin 23
 	cut_down_pin = 18 #GPIO pin 18
@@ -23,7 +24,6 @@ class McHab2012:
 		self.current_time = time.time()*1000.0
 		self.previous_data_read_time = self.current_time
 		self.previous_buzzer_time = self.current_time
-		self.previous_cut_time = self.current_time
 		
 		#timer offset
 		self.cut_time += self.current_time
@@ -51,7 +51,7 @@ class McHab2012:
 				self.buzzer.loop(self.current_time, 5) #Run buzzer subroutine
 				self.previous_buzzer_time = self.current_time #reset timer
 				
-			if(self.current_time - self.previous_cut_time > self.cut_time):
+			if(self.current_time - self.previous_cut_time > self.cut_timer):
 				self.CutDown.cut(self.current_time) #Run cut down subroutine
 				self.previous_cut_time = self.current_time #reset timer
 
