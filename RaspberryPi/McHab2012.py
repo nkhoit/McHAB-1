@@ -40,6 +40,7 @@ if __name__ == '__main__':
 	
 	#Run the loop subroutine indefinitly
 	while(1):
+		print "a"
 		mchab.loop()
 		
 
