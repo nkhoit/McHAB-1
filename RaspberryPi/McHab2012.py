@@ -17,7 +17,7 @@ class McHab2012:
 
 	def __init__(self):
 		self.buzzer = Buzzer.Buzzer(self.buzzer_pin) #Create Buzzer Object
-		self.CutDown = CutDown.CutDown(self.cut_down_pin) #Create CutDown Object
+		self.CutDown = CutDown.CutDown(self.cut_down_pin, 1000) #Create CutDown Object
 		
 		#Timer Variables
 		self.current_time = time.time()*1000.0
