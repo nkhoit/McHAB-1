@@ -19,15 +19,16 @@ class McHab2012:
 	altitude_threshold = 500 #500 meters
 
 	def __init__(self):
-		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, buzzer_start_time, altitude_threshold) #Create Buzzer Object
-		self.CutDown = CutDown.CutDown(self.cut_down_pin, cut_time) #Create CutDown Object
+		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
+		self.CutDown = CutDown.CutDown(self.cut_down_pin, self.cut_time) #Create CutDown Object
 		
 		#Timer Variables
 		self.current_time = time.time()*1000.0
-		self.previous_data_read_time = 0
-		self.previous_buzzer_time = 0
-		self.previous_cut_time = 0
-		self.previous_display_time = 0
+		self.previous_data_read_time = self.current_time
+		self.previous_buzzer_time = self.current_time
+		self.previous_cut_time = self.current_time
+		self.previous_display_time = self.current_time
+		
 			
 	def loop(self):
 		self.current_time = time.time()*1000.0 #Get current time
@@ -40,6 +41,7 @@ class McHab2012:
 		#start up 
 		if(self.current_time < self.system_start_time):
 			self.buzzer.beep_delay(self.current_time)
+			print initial beep
 	
 		#Main loop for reading data, cut rope and buzzer
 		else:
