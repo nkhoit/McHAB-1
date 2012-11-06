@@ -41,7 +41,7 @@ class McHab2012:
 		#start up 
 		if(self.current_time < self.system_start_time):
 			self.buzzer.beep_delay(self.current_time)
-			print initial beep
+			print "initial beep"
 	
 		#Main loop for reading data, cut rope and buzzer
 		else:
