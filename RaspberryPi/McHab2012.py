@@ -29,7 +29,7 @@ class McHab2012:
 			#Run data read subroutine
 			self.previous_data_read_time = self.current_time #reset timer
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
-			self.buzzer.loop(1850000, 5) #Run buzzer subroutine
+			self.buzzer.loop(1850000, 5000) #Run buzzer subroutine
 			self.previous_buzzer_time = self.current_time #reset timer
 		if(self.current_time - self.previous_cut_time > self.cut_time):
 			#Run cut down subroutine
