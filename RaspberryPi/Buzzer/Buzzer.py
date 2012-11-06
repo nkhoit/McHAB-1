@@ -12,7 +12,7 @@ class Buzzer:
 
 		
 	def loop(self, current_time, altitude):
-		if(not (current_time < start_time) && altitude < altitude_threshold):
+		if(not (current_time < start_time) and altitude < altitude_threshold):
 			GPIO.output(pin_number, GPIO.HIGH)
 			print "hello_world"
 
