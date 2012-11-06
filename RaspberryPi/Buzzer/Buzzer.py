@@ -6,13 +6,14 @@ class Buzzer:
 	altitude_threshold = 500 #500 meters
 
 	def __init__(self, pin_number):
+		self.pin = pin_number
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(pin_number, GPIO.OUT)
 		GPIO.output(pin_number, GPIO.LOW)
 
 		
 	def loop(self, current_time, altitude):
-		if(not (current_time < start_time) and altitude < altitude_threshold):
-			GPIO.output(pin_number, GPIO.HIGH)
+		if(not (current_time < self.start_time) and altitude < self.altitude_threshold):
+			GPIO.output(self.pin, GPIO.HIGH)
 			print "hello_world"
 
