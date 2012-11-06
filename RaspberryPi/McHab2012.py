@@ -31,7 +31,7 @@ class McHab2012:
 			self.previous_buzzer_time = self.current_time #reset timer
 		if(self.current_time - self.previous_cut_time > self.cut_time):
 			#Run cut down subroutine
-			self.previous_cut_time = self.curent_time #reset timer
+			self.previous_cut_time = self.current_time #reset timer
 
 if __name__ == '__main__':
 	mchab = McHab2012()
