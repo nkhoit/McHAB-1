@@ -26,7 +26,7 @@ class McHab2012:
 		self.previous_cut_time = self.current_time
 		self.previous_display_time = self.current_time
 		
-		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.current_time, self.self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
+		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.current_time, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
 		self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
 		
 			
