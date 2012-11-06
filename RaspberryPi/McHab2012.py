@@ -24,7 +24,7 @@ class McHab2012:
 			
 	def loop(self):
 		if(self.current_time - self.previous_data_read_time > self.data_read_time):
-			self.buzzer.loop() #Run data read subroutine
+			self.buzzer.loop(50, 5) #Run data read subroutine
 			self.previous_data_read_time = self.current_time #reset timer
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
 			#Run buzzer subroutine
