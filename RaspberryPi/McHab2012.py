@@ -35,7 +35,7 @@ class McHab2012:
 			self.buzzer.loop(self.current_time, 5) #Run buzzer subroutine
 			self.previous_buzzer_time = self.current_time #reset timer
 		if(self.current_time - self.previous_cut_time > self.cut_time):
-			self.cut(self.current_time) #Run cut down subroutine
+			self.CutDown.cut(self.current_time) #Run cut down subroutine
 			self.previous_cut_time = self.current_time #reset timer
 
 if __name__ == '__main__':
