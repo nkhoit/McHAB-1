@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 class Buzzer:
 	start_time = 1800000 #30 minutes
 	altitude_threshold = 500 #500 meters
-	delay = 60000 #1 second delay between beep
+	delay = 1000 #1 second delay between beep
 
 	def __init__(self, pin_number):
 		self.pin = pin_number
