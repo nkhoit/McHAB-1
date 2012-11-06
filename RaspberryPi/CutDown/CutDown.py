@@ -25,7 +25,7 @@ class CutDown:
 				self.previous_time = current_time; #Start timer
 				
 			#Resistor is on for an amount determined by delay and then will be shut off
-			elif(current_time - self.previous_time > delay):
+			elif(current_time - self.previous_time > self.delay):
 				GPIO.output(self.pin, GPIO.LOW) #STOP BURNING
 				self.status = 1; #Wire is cut
 				
