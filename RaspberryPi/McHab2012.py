@@ -11,8 +11,8 @@ class McHab2012:
 	#Constants: To do, change format
 	system_start_time = 3000 #3 seconds
 	data_read_time = 20 #50 Hz
-	buzzer_time = 120000 #2 minutes
-	cut_time = 60000 #1 minutes 
+	buzzer_time = 60000 #1 minutes
+	cut_time = 30000 #0.5 minutes 
 	buzzer_pin = 25 #GPIO pin 25
 	cut_down_pin = 0 #GPIO pin 0
 	buzzer_start_time = 1800000 #30 minutes
@@ -28,7 +28,6 @@ class McHab2012:
 		self.previous_buzzer_time = self.current_time
 		self.previous_cut_time = self.current_time
 		self.previous_display_time = self.current_time
-		self.buzzer_start_time = self.current_time + self.buzzer_start_time
 		
 			
 	def loop(self):
@@ -36,11 +35,11 @@ class McHab2012:
 	
 		#print timer
 		if(self.current_time - self.previous_display_time > 2000):
-			print self.current_time
+			#print self.current_time
 			self.previous_display_time = self.current_time
 	
 		#start up 
-		if(self.current_time < self.system_start_time):
+		if(self.current_time < (self.current_time + self.system_start_time)):
 			self.buzzer.beep_delay(self.current_time)
 			print "initial beep"
 	
