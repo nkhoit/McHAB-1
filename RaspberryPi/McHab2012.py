@@ -28,6 +28,7 @@ class McHab2012:
 		self.previous_buzzer_time = self.current_time
 		self.previous_cut_time = self.current_time
 		self.previous_display_time = self.current_time
+		self.buzzer_start_time = self.current_time + self.buzzer_start_time
 		
 			
 	def loop(self):
