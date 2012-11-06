@@ -13,7 +13,7 @@ class McHab2012:
 	buzzer_time = 1000 #1 minutes
 	cut_time = 200 #5 Hz
 	buzzer_pin = 25 #GPIO pin 25
-	cut_down_pin 
+	cut_down_pin = 0 #GPIO pin 0
 
 	def __init__(self):
 		self.buzzer = Buzzer.Buzzer(self.buzzer_pin) #Create Buzzer Object
