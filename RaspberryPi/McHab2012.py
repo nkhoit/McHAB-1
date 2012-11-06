@@ -24,7 +24,6 @@ class McHab2012:
 		self.previous_data_read_time = self.current_time
 		self.previous_buzzer_time = self.current_time
 		self.previous_cut_time = self.current_time
-		self.previous_display_time = self.current_time
 		
 		#timer offset
 		self.cut_time += self.current_time
@@ -37,11 +36,6 @@ class McHab2012:
 			
 	def loop(self):
 		self.current_time = time.time()*1000.0 #Get current time
-	
-		#print timer
-		if(self.current_time - self.previous_display_time > 2000):
-			#print self.current_time
-			self.previous_display_time = self.current_time
 	
 		#start up 
 		if(self.current_time < self.system_start_time):
