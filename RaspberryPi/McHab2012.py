@@ -24,6 +24,7 @@ class McHab2012:
 		self.current_time = time.time()*1000.0
 		self.previous_data_read_time = self.current_time
 		self.previous_buzzer_time = self.current_time
+		self.previous_cut_time = self.current_time
 		
 		#timer offset
 		self.cut_time += self.current_time
