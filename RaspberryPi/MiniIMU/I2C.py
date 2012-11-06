@@ -1,9 +1,7 @@
 #!/usr/bin/python
-
 import smbus
 
 class I2C:
-
     def __init__(self, address, bus=smbus.SMBus(0)):
         self.address=address
         self.bus=bus
@@ -17,7 +15,7 @@ class I2C:
 
     def readByte(self, reg):
         try:
-            self.bus.read_byte_data(self.address, reg)
+            return self.bus.read_byte_data(self.address, reg)
         except IOError, err:
             print "Error accessing 0x%02X" % self.address
             return -1

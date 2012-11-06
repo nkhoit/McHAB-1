@@ -4,7 +4,7 @@ import time
 class LSM303DLM:
     #I2C addresses for LSM303
     _ACCEL_ADDRESS = 0x18
-    _MAG_ADDRESS = 0x69
+    _MAG_ADDRESS = 0x1e
 
     # device types
 
@@ -75,14 +75,6 @@ class LSM303DLM:
 
     _LSM303_WHO_AM_I_M = 0x0F # DLM only
 
-    _LSM303_TEMP_OUT_H_M = 0x31 # DLHC only
-    _LSM303_TEMP_OUT_L_M = 0x32 # DLHC only
-
-    _LSM303DLM_OUT_Z_H_M = 0x05
-    _LSM303DLM_OUT_Z_L_M = 0x06
-    _LSM303DLM_OUT_Y_H_M = 0x07
-    _LSM303DLM_OUT_Y_L_M = 0x08
-
     def __init__(self, accel_address = _ACCEL_ADDRESS, mag_address = _MAG_ADDRESS):
         self.accel = I2C.I2C(accel_address)
         self.mag = I2C.I2C(mag_address)
@@ -92,6 +84,8 @@ class LSM303DLM:
         self.accel.writeByte(self._LSM303_CTRL_REG1_A, 0x3F)
         #Enable Magnetometer
         self.mag.writeByte(self._LSM303_MR_REG_M, 0x00)
+        self.mag.writeByte(self._LSM303_CRB_REG_M, 0x40)
+        self.mag.writeByte(self._LSM303_CRA_REG_M, 0x1C)
 
     def readRawAccel(self):
         xla = self.accel.readByte(self._LSM303_OUT_X_L_A)
@@ -102,9 +96,9 @@ class LSM303DLM:
         zha = self.accel.readByte(self._LSM303_OUT_Z_H_A)
 
         data = [(xha<<8|xla)>>4, (yha<<8|yla)>>4,(zha<<8|zla)>>4]
-        for i in data:
-            if(i>2**12/2-1):
-                i-=2**12
+        for i in range(3):
+            if(data[i]>2**12/2-1):
+                data[i]-=2**12
 
         return data
 
@@ -117,9 +111,9 @@ class LSM303DLM:
         zha = self.mag.readByte(self._LSM303_OUT_Z_H_M)
 
         data = [xha<<8|xla, yha<<8|yla,zha<<8|zla]
-        for i in data:
-            if(i>2**12/2-1):
-                i-=2**16
+        for i in range(3):
+            if(data[i]>2**16/2-1):
+                data[i]-=2**16
 
         return data
 
