@@ -17,7 +17,7 @@ class McHab2012:
 	cut_time = 10000 #0.5	 minutes 
 	buzzer_pin = 23 #GPIO pin 23
 	cut_down_pin = 18 #GPIO pin 18
-	buzzer_start_time = 1800000 #30 minutes
+	buzzer_start_time = 3000 #30 minutes
 	altitude_threshold = 500 #500 meters
 	
 	# cut_down_time = 10000
