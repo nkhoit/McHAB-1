@@ -20,7 +20,7 @@ class McHab2012:
 	# altitude_threshold = 500 #500 meters
 	
 	cut_down_time = 10000
-	buzzer_status = 0 # 0 = idle, 1 = on
+	beeper_status = 0 # 0 = idle, 1 = on
 	buzzer_start = 10000
 	buzzer_pin = 23
 	altitude_threshold = 500 
@@ -28,6 +28,7 @@ class McHab2012:
 	def __init__(self):		
 		#self.timer_system_start = Timer.Timer(3000)
 		self.timer_buzzer_poll = Timer.Timer(1000)
+		self.timer_beeper = Timer.Timer(1000)
 		#self.timer_cut_poll = Timer.Timer(1000)
 	
 		#start timer
@@ -57,10 +58,19 @@ class McHab2012:
 			
 	def loop(self):
 	
-		if(self.buzzer_status == 1 or self.timer_buzzer_poll.get_flag() == 0):
-			print self.buzzer_status
-			self.buzzer_status = self.buzzer.loop(5) #Run buzzer subroutine	
+		#Buzzer 
+		if(self.timer_buzzer_poll.get_flag() == 0):
+			self.beeper_status = self.buzzer.loop(5) #Run buzzer subroutine	
 			self.timer_buzzer_poll.start_timer()
+			
+			#start beep timer if beeper status is on
+			if(self.beeper_status == 1):
+				self.timer_beeper.start_timer()
+		
+		#Beeping
+		if(self.beeper_status == 1 and self.timer_beeper.get_flag() == 0):
+			self.buzzer.toggle_beep()
+			self.timer_beeper.start_timer()
 	
 		# self.current_time = time.time()*1000.0 #Get current time
 	
