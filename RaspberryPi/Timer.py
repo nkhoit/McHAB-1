@@ -10,6 +10,7 @@ class Timer:
 		self.delay = delay
 		
 	def start_timer(self):
+		self.current_time = time.time()*1000.0
 		self.previous_time = self.current_time
 	
 	def get_flag(self):
