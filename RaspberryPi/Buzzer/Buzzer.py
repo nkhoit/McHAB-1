@@ -1,16 +1,12 @@
 #!/usr/bin/python
 import RPi.GPIO as GPIO
 import sys
-sys.path.append("../")
-import Timer
 
 class Buzzer:
-	def __init__(self, pin_number, start_time, beeping_delay, altitude_threshold):
+	def __init__(self, pin_number, current_time, start_time, altitude_threshold):
 		self.pin = pin_number
 		self.start_time = start_time
 		self.altitude_threshold = altitude_threshold
-		self.timer_start = Timer.Timer(start_time)
-		self.timer_delay = Timer.Timer(beeping_delay)
 
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(pin_number, GPIO.OUT)
@@ -18,11 +14,8 @@ class Buzzer:
 		
 		self.toggle = 0 #Default toggle for delayed beeping. 0 = off, 1 = on
 		
-		#Start timer_start
-		self.timer_start.start_timer()
-		
-	def loop(self, altitude):
-		if(self.timer_start.get_flag() == 0 and altitude < self.altitude_threshold):
+	def loop(self, current_time, altitude):
+		if(current_time > self.start_time and altitude < self.altitude_threshold):
 			return 1
 		else:
 			return 0
