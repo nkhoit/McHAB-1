@@ -30,6 +30,10 @@ class McHab2012:
 		#self.timer_cut_poll = Timer.Timer(1000)
 	
 		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.buzzer_start, self.buzzer_start, self.altitude_threshold) #Create Buzzer Object
+		
+		#start timer
+		self.timer_buzzer_poll.start_timer()
+		
 		#self.CutDown = CutDown.CutDown(self.cut_down_pin, self.cut_down_time) #Create CutDown Object	
 	
 		#Timer Variables
