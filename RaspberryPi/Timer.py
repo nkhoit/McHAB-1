@@ -21,6 +21,7 @@ class Timer:
 			self.previous_time = -1
 			return 0
 		else:
+			print "xadas"
 			return -1
 			
 		
