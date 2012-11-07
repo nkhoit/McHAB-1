@@ -26,23 +26,8 @@ class McHab2012:
 	# buzzer_pin = 23
 	# altitude_threshold = 500 
 
-	def __init__(self):		
-		#self.timer_system_start = Timer.Timer(3000)
-		#self.timer_buzzer_poll = Timer.Timer(1000)
-		#self.timer_beeper = Timer.Timer(1000)
-		#self.timer_cut_poll = Timer.Timer(1000)
-	
-		#start timer
-		#self.timer_buzzer_poll.start_timer()
-	
-		#Initiate peripherals
-		#self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.buzzer_start, self.buzzer_start, self.altitude_threshold) #Create Buzzer Object
-		
-
-		
-		#self.CutDown = CutDown.CutDown(self.cut_down_pin, self.cut_down_time) #Create CutDown Object	
-	
-		#Set current to 0
+	def __init__(self):			
+		#Get initial time offset
 		self.initial_time = time.time()*1000.0
 		self.current_time = 0
 		
@@ -56,9 +41,12 @@ class McHab2012:
 		#Buzzer variables
 		self.beep = 0 #0 = idle, 1 = on
 		
+		#Initiate Peripherals
 		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.current_time, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
 		self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
 		
+		#temp variables, remove later
+		self.previous_time_temp = 0
 			
 	def loop(self):
 		#get current time
@@ -89,6 +77,10 @@ class McHab2012:
 			# if(self.current_time - self.previous_data_read_time > self.data_read_time):
 				#Run data read subroutine
 				# self.previous_data_read_time = self.current_time #reset timer		
+		
+		#Print time to the screen every one seconds for debugging
+		if(self.current_time - self.previous_time_temp > 1000)
+			print self.count
 		
 		#Check at a very low frequency if the platform reached the time threshold and altitude to beep
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
