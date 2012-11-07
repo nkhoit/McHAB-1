@@ -9,7 +9,8 @@ import Buzzer
 
 class McHab2012:
 	#Constants: To do, change format
-	system_start_time = 3000 #3 seconds
+	system_start_time = 5000 
+	system_start_beep_interval = 1000
 	data_read_time = 20 #50 Hz
 	buzzer_time = 1000 #1 minutes
 	beep_time = 1000 
@@ -47,6 +48,7 @@ class McHab2012:
 		self.current_time = 0
 		
 		#Define timer variables
+		self.previous_start_up_time = 0
 		self.previous_data_read_time = 0
 		self.previous_buzzer_time = 0
 		self.previous_cut_time = 0
@@ -87,16 +89,19 @@ class McHab2012:
 		# else:
 			# if(self.current_time - self.previous_data_read_time > self.data_read_time):
 				#Run data read subroutine
-				# self.previous_data_read_time = self.current_time #reset timer
-				
+				# self.previous_data_read_time = self.current_time #reset timer		
+		
+		#Check at a very low frequency if the platform reached the time threshold and altitude to beep
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
 			self.beep = self.buzzer.loop(self.current_time, 5) #Run buzzer subroutine
 			self.previous_buzzer_time = self.current_time #reset timer
-			print self.beep
-			
-		if(self.beep == 1 and self.current_time - self.previous_beep_time > self.beep_time):
-			self.buzzer.toggle_beep()
-			self.previous_beep_time = self.current_time
+		
+		#Beep the buzzer at a fast frequency for start up and landing
+		if(self.current_time - self.previous_beep_time > self.beep_time):
+			#beep if the platform landed or it just started
+			if(self.beep == 1 or self.current_time < self.system_start_time):
+				self.buzzer.toggle_beep()
+				self.previous_beep_time = self.current_time
 			
 			# if(self.current_time - self.previous_cut_time > self.cut_timer):
 				# self.CutDown.cut(self.current_time) #Run cut down subroutine
