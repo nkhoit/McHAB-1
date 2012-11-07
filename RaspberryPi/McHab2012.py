@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import Timer
+import time
 import RPi.GPIO as GPIO
 
 #import user libraries
