@@ -79,7 +79,7 @@ class McHab2012:
 				# self.previous_data_read_time = self.current_time #reset timer		
 		
 		#Print time to the screen every one seconds for debugging
-		if(self.current_time - self.previous_time_temp > 1000)
+		if(self.current_time - self.previous_time_temp > 1000):
 			print self.count
 		
 		#Check at a very low frequency if the platform reached the time threshold and altitude to beep
