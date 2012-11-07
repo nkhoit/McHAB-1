@@ -20,6 +20,7 @@ class McHab2012:
 	# altitude_threshold = 500 #500 meters
 	
 	cut_down_time = 10000
+	buzzer_status = 0 # 0 = idle, 1 = on
 	buzzer_start = 30000
 	buzzer_pin = 23
 	altitude_threshold = 500 
@@ -56,8 +57,8 @@ class McHab2012:
 			
 	def loop(self):
 	
-		if(self.timer_buzzer_poll.get_flag() == 0):
-			self.buzzer.loop(5) #Run buzzer subroutine	
+		if(buzzer_status == 1 or self.timer_buzzer_poll.get_flag() == 0):
+			self.buzzer_status = self.buzzer.loop(5) #Run buzzer subroutine	
 			self.timer_buzzer_poll.start_timer()
 	
 		# self.current_time = time.time()*1000.0 #Get current time
