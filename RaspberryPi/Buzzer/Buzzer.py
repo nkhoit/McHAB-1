@@ -22,7 +22,7 @@ class Buzzer:
 		self.timer_start.start_timer()
 		
 	def loop(self, altitude):
-		if(self.timer_start.get_flag == 0 and altitude < self.altitude_threshold):
+		if(self.timer_start.get_flag() == 0 and altitude < self.altitude_threshold):
 			self.beep_delay()
 					
 	def beep_delay(self):
@@ -30,7 +30,7 @@ class Buzzer:
 		if(self.timer_delay.previous_time == -1):
 			self.timer_delay.start_timer()
 		
-		elif(self.timer_delay.get_flag == 0):
+		elif(self.timer_delay.get_flag() == 0):
 			if(self.toggle == 0):
 				self.toggle = 1 #set toggle to 1 for next iteration
 				GPIO.output(self.pin, GPIO.LOW)

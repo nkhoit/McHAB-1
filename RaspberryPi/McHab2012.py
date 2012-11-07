@@ -57,7 +57,6 @@ class McHab2012:
 	def loop(self):
 	
 		if(self.timer_buzzer_poll.get_flag() == 0):
-			print "hello"
 			self.buzzer.loop(5) #Run buzzer subroutine	
 			self.timer_buzzer_poll.start_timer()
 	
