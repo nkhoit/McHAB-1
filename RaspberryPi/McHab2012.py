@@ -83,6 +83,7 @@ class McHab2012:
 		if(self.current_time - self.previous_time_temp > 1000):
 			print self.count
 			self.count += 1
+			self.previous_time_temp = self.current_time
 		
 		#Check at a very low frequency if the platform reached the time threshold and altitude to beep
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
