@@ -5,7 +5,7 @@ import RPi.GPIO as GPIO
 #import user libraries
 from ImportDirectoryList import * #import all used directories
 import Buzzer 
-#import CutDown
+import CutDown
 
 class McHab2012:
 	#Constants: To do, change format
@@ -57,7 +57,7 @@ class McHab2012:
 		self.beep = 0 #0 = idle, 1 = on
 		
 		self.buzzer = Buzzer.Buzzer(self.buzzer_pin, self.current_time, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
-		#self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
+		self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
 		
 			
 	def loop(self):
