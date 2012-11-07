@@ -2,7 +2,7 @@
 import RPi.GPIO as GPIO
 
 class CutDown:
-	delay = 60000 #1 minutes
+	delay = 15000 #1 minutes
 
 	def __init__(self, current_time, pin_number, cut_down_time):
 		self.pin = pin_number #Set cut down GPIO pin
