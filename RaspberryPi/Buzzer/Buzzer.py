@@ -21,7 +21,7 @@ class Buzzer:
 		self.timer_start.start_timer()
 		
 	def loop(self, altitude):
-		if(self.timer_start.get_flag == 0 && altitude < self.altitude_threshold):
+		if(self.timer_start.get_flag == 0 and altitude < self.altitude_threshold):
 			self.beep_delay()
 					
 	def beep_delay(self):
