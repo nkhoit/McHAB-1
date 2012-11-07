@@ -17,7 +17,7 @@ class McHab2012:
 	cut_time = 20000
 	buzzer_pin = 23 
 	cut_down_pin = 18 
-	buzzer_start_time = 10000 
+	buzzer_start_time = 40000 
 	altitude_threshold = 500 
 	
 	# cut_down_time = 10000
@@ -52,32 +52,11 @@ class McHab2012:
 	def loop(self):
 		#get current time
 		self.current_time = time.time()*1000.0 - self.initial_time
-		
-		#Buzzer 
-		# if(self.timer_buzzer_poll.get_flag() == 0):
-			# self.beeper_status = self.buzzer.loop(5) #Run buzzer subroutine	
-			# self.timer_buzzer_poll.start_timer()
-			
-			#start beep timer if beeper status is on
-			# if(self.beeper_status == 1):
-				# self.timer_beeper.start_timer()
-		
-		#Beeping
-		# if(self.beeper_status == 1 and self.timer_beeper.get_flag() == 0):
-			# self.buzzer.toggle_beep()
-			# self.timer_beeper.start_timer()
-	
-		# self.current_time = time.time()*1000.0 #Get current time
-	
-		#start up 
-		# if(self.current_time < self.system_start_time):
-			# self.buzzer.beep_delay(self.current_time)
 	
 		#Main loop for reading data, cut rope and buzzer
-		# else:
-			# if(self.current_time - self.previous_data_read_time > self.data_read_time):
-				#Run data read subroutine
-				# self.previous_data_read_time = self.current_time #reset timer		
+		if(self.current_time - self.previous_data_read_time > self.data_read_time):
+			#Run data read subroutine
+			self.previous_data_read_time = self.current_time #reset timer		
 		
 		#Print time to the screen every one seconds for debugging
 		if(self.current_time - self.previous_time_temp > 1000):
@@ -89,18 +68,18 @@ class McHab2012:
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
 			self.beep = self.buzzer.loop(self.current_time, 5) #Run buzzer subroutine
 			self.previous_buzzer_time = self.current_time #reset timer
-		
+			
+		#Cut down the rope if the timing is reached
+		if(self.current_time - self.previous_cut_time > self.cut_timer):
+			self.CutDown.cut(self.current_time) #Run cut down subroutine
+			self.previous_cut_time = self.current_time #reset timer
+			
 		#Beep the buzzer at a fast frequency for start up and landing
 		if(self.current_time - self.previous_beep_time > self.beep_time):
 			#beep if the platform landed or it just started
 			if(self.beep == 1 or self.current_time < self.system_start_time):
 				self.buzzer.toggle_beep()
 				self.previous_beep_time = self.current_time
-			
-		#Cut down the rope if the timing is reached
-		if(self.current_time - self.previous_cut_time > self.cut_timer):
-			self.CutDown.cut(self.current_time) #Run cut down subroutine
-			self.previous_cut_time = self.current_time #reset timer
 
 if __name__ == '__main__':
 	mchab = McHab2012()
