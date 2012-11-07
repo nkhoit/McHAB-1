@@ -10,15 +10,15 @@ import Buzzer
 class McHab2012:
 	#Constants: To do, change format
 	system_start_time = 5000 
-	data_read_time = 20 #50 Hz
-	buzzer_time = 1000 #1 minutes
+	data_read_time = 20 
+	buzzer_time = 1000 
 	beep_time = 1000 
 	cut_timer = 1000
-	cut_time = 10000 #0.5	 minutes 
-	buzzer_pin = 23 #GPIO pin 23
-	cut_down_pin = 18 #GPIO pin 18
-	buzzer_start_time = 10000 #30 minutes
-	altitude_threshold = 500 #500 meters
+	cut_time = 20000
+	buzzer_pin = 23 
+	cut_down_pin = 18 
+	buzzer_start_time = 10000 
+	altitude_threshold = 500 
 	
 	# cut_down_time = 10000
 	# beeper_status = 0 # 0 = idle, 1 = on
@@ -102,9 +102,10 @@ class McHab2012:
 				self.buzzer.toggle_beep()
 				self.previous_beep_time = self.current_time
 			
-			# if(self.current_time - self.previous_cut_time > self.cut_timer):
-				# self.CutDown.cut(self.current_time) #Run cut down subroutine
-				# self.previous_cut_time = self.current_time #reset timer
+		#Cut down the rope if the timing is reached
+		if(self.current_time - self.previous_cut_time > self.cut_timer):
+			self.CutDown.cut(self.current_time) #Run cut down subroutine
+			self.previous_cut_time = self.current_time #reset timer
 
 if __name__ == '__main__':
 	mchab = McHab2012()
