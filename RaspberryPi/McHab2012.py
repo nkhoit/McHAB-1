@@ -61,7 +61,7 @@ class McHab2012:
 			
 	def loop(self):
 		#get current time
-		self.current_time = self.current_time - self.initial_time
+		self.current_time = time.time()*1000.0 - self.initial_time
 		
 		#Buzzer 
 		# if(self.timer_buzzer_poll.get_flag() == 0):
