@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import RPi.GPIO as GPIO
+import sys
 sys.path.append("../")
 import Timer
 
