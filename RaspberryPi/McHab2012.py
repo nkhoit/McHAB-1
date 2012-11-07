@@ -44,7 +44,7 @@ class McHab2012:
 	
 		#Set current to 0
 		self.initial_time = time.time()*1000.0
-		self.current_time = self.current_time - self.initial_time
+		self.current_time = 0
 		
 		#Define timer variables
 		self.previous_data_read_time = 0
