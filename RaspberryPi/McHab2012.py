@@ -47,6 +47,7 @@ class McHab2012:
 		
 		#temp variables, remove later
 		self.previous_time_temp = 0
+		self.count = 0
 			
 	def loop(self):
 		#get current time
@@ -81,6 +82,7 @@ class McHab2012:
 		#Print time to the screen every one seconds for debugging
 		if(self.current_time - self.previous_time_temp > 1000):
 			print self.count
+			self.count += 1
 		
 		#Check at a very low frequency if the platform reached the time threshold and altitude to beep
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
