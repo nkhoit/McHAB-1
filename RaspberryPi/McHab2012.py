@@ -10,7 +10,6 @@ import Buzzer
 class McHab2012:
 	#Constants: To do, change format
 	system_start_time = 5000 
-	system_start_beep_interval = 1000
 	data_read_time = 20 #50 Hz
 	buzzer_time = 1000 #1 minutes
 	beep_time = 1000 
@@ -18,7 +17,7 @@ class McHab2012:
 	cut_time = 10000 #0.5	 minutes 
 	buzzer_pin = 23 #GPIO pin 23
 	cut_down_pin = 18 #GPIO pin 18
-	buzzer_start_time = 3000 #30 minutes
+	buzzer_start_time = 10000 #30 minutes
 	altitude_threshold = 500 #500 meters
 	
 	# cut_down_time = 10000
@@ -99,7 +98,7 @@ class McHab2012:
 		#Beep the buzzer at a fast frequency for start up and landing
 		if(self.current_time - self.previous_beep_time > self.beep_time):
 			#beep if the platform landed or it just started
-			if(self.beep == 0 or self.current_time < self.system_start_time):
+			if(self.beep == 1 or self.current_time < self.system_start_time):
 				self.buzzer.toggle_beep()
 				self.previous_beep_time = self.current_time
 			
