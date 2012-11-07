@@ -22,6 +22,7 @@ class McHab2012:
 	cut_down_time = 10000
 	buzzer_start = 30000
 	buzzer_pin = 23
+	altitude_threshold = 500 
 
 	def __init__(self):		
 		#self.timer_system_start = Timer.Timer(3000)
