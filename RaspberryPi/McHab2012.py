@@ -92,6 +92,7 @@ class McHab2012:
 		if(self.current_time - self.previous_buzzer_time > self.buzzer_time):
 			self.beep = self.buzzer.loop(self.current_time, 5) #Run buzzer subroutine
 			self.previous_buzzer_time = self.current_time #reset timer
+			print self.beep
 			
 		if(self.beep == 1 and self.current_time - self.previous_beep_time > self.beep_time):
 			self.buzzer.toggle_beep()
