@@ -9,10 +9,10 @@ class Timer:
 		self.previous_time = -1
 		self.delay = delay
 		
-	def start_timer():
+	def start_timer(self):
 		self.previous_time = self.current_time
 	
-	def get_flag(self)
+	def get_flag(self):
 		self.current_time = time.time()*1000.0
 		
 		#If the delay is reached, return 0. Else return 1.
