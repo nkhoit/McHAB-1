@@ -14,7 +14,7 @@ class McHab2012:
     buzzer_time = 1000
     beep_time = 1000
     cut_timer = 1000
-    cut_time = 20000
+    cut_time = 15000
     buzzer_pin1 = 23
     buzzer_pin2 = 22
     cut_down_pin = 18
@@ -81,6 +81,8 @@ class McHab2012:
             if(self.beep == 1 or self.current_time < self.system_start_time):
                 self.buzzer.toggle_beep()
                 self.previous_beep_time = self.current_time
+			elif(self.beep == 0 and self.current_time > self.system_start_time):
+                self.buzzer.turn_off() #TEMP, change to make the buzzer turn off once
 
 if __name__ == '__main__':
     mchab = McHab2012()

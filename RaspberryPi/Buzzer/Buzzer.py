@@ -24,15 +24,23 @@ class Buzzer:
             return 1
         else:
             return 0
+            
+    def turn_on(self):
+            GPIO.output(self.pin1, GPIO.HIGH)
+            GPIO.output(self.pin2, GPIO.HIGH)
+    
+    def turn_off(self):
+            GPIO.output(self.pin1, GPIO.LOW)
+            GPIO.output(self.pin2, GPIO.LOW)            
 
     def toggle_beep(self):
         if(self.toggle == 0):
             self.toggle = 1 #set toggle to 1 for next iteration
-            GPIO.output(self.pin1, GPIO.LOW)
-            GPIO.output(self.pin2, GPIO.LOW)
+            self.turn_off()
             print "LOW"
         else:
             self.toggle = 0 #set toggle to 0 for next iteration
-            GPIO.output(self.pin1, GPIO.HIGH)
-            GPIO.output(self.pin2, GPIO.HIGH)
+            self.turn_on()
             print "HIGH"
+            
+    
