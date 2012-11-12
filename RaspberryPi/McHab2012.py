@@ -81,7 +81,7 @@ class McHab2012:
             if(self.beep == 1 or self.current_time < self.system_start_time):
                 self.buzzer.toggle_beep()
                 self.previous_beep_time = self.current_time
-			elif(self.beep == 0 and self.current_time > self.system_start_time):
+            elif(self.beep == 0 and self.current_time > self.system_start_time):
                 self.buzzer.turn_off() #TEMP, change to make the buzzer turn off once
 
 if __name__ == '__main__':
