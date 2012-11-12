@@ -83,9 +83,9 @@ class LSM303DLM:
         #Enable Accelerometer
         self.accel.writeByte(self._LSM303_CTRL_REG1_A, 0x3F)
         #Enable Magnetometer
-        self.mag.writeByte(self._LSM303_MR_REG_M, 0x00)
-        self.mag.writeByte(self._LSM303_CRB_REG_M, 0x40)
-        self.mag.writeByte(self._LSM303_CRA_REG_M, 0x1C)
+        self.mag.writeByte(self._LSM303_MR_REG_M, 0x00) # 0b00000000
+        self.mag.writeByte(self._LSM303_CRB_REG_M, 0x70) # 011100000
+        self.mag.writeByte(self._LSM303_CRA_REG_M, 0x1C) # 0b00011100
 
     def readRawAccel(self):
         xla = self.accel.readByte(self._LSM303_OUT_X_L_A)

@@ -23,12 +23,3 @@ if __name__ == '__main__':
         #print 'Mag   = X: %d, Y: %d, Z: %d' % (b_x,b_y,b_z)
         print 'Gyro   = X: %d, Y: %d, Z: %d' % (g_x,g_y,g_z)
 
-
-        '''
-        counter+=1
-        if(current-initial>1000):
-            print 'Sampling Rate: ' + str(counter)
-            initial=current
-            counter=0
-        '''
-
