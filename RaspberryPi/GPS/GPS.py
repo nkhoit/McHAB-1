@@ -1,9 +1,9 @@
 import serial
 
 class GPS:
-    def __init__(self):
+    def __init__(self, port = '/dev/ttyAMA0'):
         #Create a serial object that will read the GPS
-        self.ser = serial.Serial('COM8', 4800, timeout=0)
+        self.ser = serial.Serial(port, 4800, timeout=0)
         self.ser.readline()
 
         self.partial_string = ''

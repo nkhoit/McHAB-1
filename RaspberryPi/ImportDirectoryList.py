@@ -6,4 +6,6 @@ sys.path.append("./CutDown")
 sys.path.append("./MiniIMU")
 sys.path.append("./SocketTest")
 sys.path.append("./TestingScript")
+sys.path.append("./GPS")
+sys.path.appent("./BMP085)
 
