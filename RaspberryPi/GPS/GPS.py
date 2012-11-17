@@ -4,24 +4,15 @@ class GPS:
     def __init__(self, port = '/dev/ttyAMA0'):
         #Create a serial object that will read the GPS
         self.ser = serial.Serial(port, 4800, timeout=0)
-        self.ser.readline()
-
-        self.partial_string = ''
 
     def readGPS(self):
-        raw_string = self.partial_string
-        for data in self.ser.read(4096):
-            raw_string+=data
+        gpsList=[]
+        while(self.ser.inWaiting()>0):
+            data = self.ser.readline()
+            gpsList.append(data.rstrip())
 
-        parsed_list = raw_string.split('\r\n')
-        for data in parsed_list:
-            if(data != ''):
-                if(data[-1] != '\r'):
-                    self.partial_string = data
+        return gpsList
 
-        parsed_list = [x.rstrip() for x in parsed_list]
-
-        return parsed_list
 
 if __name__ == '__main__':
     gps = GPS()
@@ -32,8 +23,6 @@ if __name__ == '__main__':
         currentTime = time.time()*1000
         if(currentTime-initialTime > 1000):
             data = gps.readGPS()
-            for line in data:
-                if(line.split(',')[0] == '$GPGGA'):
-                    print line
+            print ('\n').join(data)
             initialTime=currentTime
 

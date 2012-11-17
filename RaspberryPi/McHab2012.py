@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import time
 import datetime
+import os
 import RPi.GPIO as GPIO
 
 #import user libraries
@@ -24,10 +25,13 @@ class McHab2012:
     buzzer_pin2 = 22
     cut_down_pin = 18
     buzzer_start_time = 40000
-    altitude_threshold = 500
+    altitude_threshold = 1000
     imu_time = 40
     gps_time = 1000
     bmp_time = 1000
+
+    #Boundary Cutdown
+    NSEW_limits = [46*100+10, 45*100+25, 72*100+20, 73*100+20]
 
     # cut_down_time = 10000
     # beeper_status = 0 # 0 = idle, 1 = on
@@ -55,6 +59,11 @@ class McHab2012:
         #Buzzer variables
         self.beep = 0 #0 = idle, 1 = on
 
+        #GPS initial conditions
+        self.locked = False
+        self.initialPosition = []
+        self.boundary_cutdown = False
+
         #Initiate Peripherals
         self.buzzer = Buzzer.Buzzer(self.buzzer_pin1, self.buzzer_pin2, self.current_time, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
         self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
@@ -64,10 +73,12 @@ class McHab2012:
         self.gps = GPS.GPS()
 
         #Create log files
-        self.current_directory_name = "./log/"+datetime.datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")+"/"
-        self.imu_file = open(self.current_directory_name+"IMUData.txt","w")
-        self.bmp_file = open(self.current_directory_name+"BMPData.txt","w")
-        self.gps_file = open(self.current_directory_name+"GPSData.txt","w")
+        newpath = './log/'+datetime.datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
+        if not os.path.exists(newpath):
+            os.makedirs(newpath)
+        self.imu_file = open(newpath+"/IMUData.txt","w")
+        self.bmp_file = open(newpath+"/BMPData.txt","w")
+        self.gps_file = open(newpath+"/GPSData.txt","w")
 
         #temp variables, remove later
         self.previous_time_temp = 0
@@ -81,32 +92,43 @@ class McHab2012:
 
         #Read IMU at 25Hz
         if(self.current_time - self.previous_IMU_read > self.imu_time):
-            accel = lsm.readRawAccel()
-            mag = lsm.readRawMag()
-            gyro = l3g.readRawGyro()
+            accel = self.lsm.readRawAccel()
+            mag = self.lsm.readRawMag()
+            gyro = self.l3g.readRawGyro()
 
-            imu_file.write("ax:%d;ay:%d;az:%d;gx:%d;gy:%d;gz:%d;mx:%d;my:%d;mz:%d\n" %(accel[0],accel[1],accel[2],gyro[0],gyro[1],gyro[2],mag[0],mag[1],mag[2]))
+            self.imu_file.write("ax:%d;ay:%d;az:%d;gx:%d;gy:%d;gz:%d;mx:%d;my:%d;mz:%d\n" %(accel[0],accel[1],accel[2],gyro[0],gyro[1],gyro[2],mag[0],mag[1],mag[2]))
 
             self.previous_IMU_read = self.current_time
 
         #Read GPS at 1Hz
         if(self.current_time - self.previous_GPS_read > self.gps_time):
-            gps_list = gps.readGPS()
+            gps_list = self.gps.readGPS()
 
             for line in gps_list:
-                gps_file.write(line+"\n")
+                self.gps_file.write(line+"\n")
+                data=line.split(',')
+                if(data[0]=='$GPGGA'):
+                    coord = [data[2], data[4]]
+                    if(data[6]=='1' and self.locked==False):
+                        self.initialPosition = coord
+                        self.locked = True
+                        print "We get signal! We're at: " + str(self.initialPosition)
+                    if(self.locked):
+                        if( coord[0] > NSEW[0] or coord[0] < NSEW[1] or coord[1] < NSEW[2] or coord[1] > NSEW[3] ):
+                            self.boundary_cutdown=True
 
-            self.previous_IMU_read = self.current_time
+
+            self.previous_GPS_read = self.current_time
 
         #Read BMP at 1Hz
         if(self.current_time - self.previous_BMP_read > self.bmp_time):
-            bmp.readTemperature()
-            bmp.readPressure()
-            bmp.readAltitude()
+            temp=self.bmp.readTemperature()
+            pressure=self.bmp.readPressure()
+            altitude=self.bmp.readAltitude()
 
-            bmp_file.write("temp:%f;p:%f;alt:%f\n" %(accel[0],accel[y],accel[z],))
+            self.bmp_file.write("temp:%f;p:%f;alt:%f\n" %(temp,pressure,altitude))
 
-            self.previous_IMU_read = self.current_time
+            self.previous_BMP_read = self.current_time
 
         #Print time to the screen every one seconds for debugging
         if(self.current_time - self.previous_time_temp > 1000):
@@ -120,7 +142,7 @@ class McHab2012:
             self.previous_buzzer_time = self.current_time #reset timer
 
         #Cut down the rope if the timing is reached
-        if(self.current_time - self.previous_cut_time > self.cut_timer):
+        if((self.current_time - self.previous_cut_time > self.cut_timer) or self.boundary_cutdown):
             self.CutDown.cut(self.current_time) #Run cut down subroutine
             self.previous_cut_time = self.current_time #reset timer
 
