@@ -27,7 +27,7 @@ class McHab2012:
     buzzer_start_time = 40000
     altitude_threshold = 1000
     imu_time = 40
-    gps_time = 1000
+    gps_time = 2000
     bmp_time = 1000
 
     #Boundary Cutdown
@@ -68,7 +68,9 @@ class McHab2012:
         self.buzzer = Buzzer.Buzzer(self.buzzer_pin1, self.buzzer_pin2, self.current_time, self.buzzer_start_time, self.altitude_threshold) #Create Buzzer Object
         self.CutDown = CutDown.CutDown(self.current_time, self.cut_down_pin, self.cut_time) #Create CutDown Object
         self.lsm = LSM303DLM.LSM303DLM()
+        self.lsm.enableDefault()
         self.l3g = L3G4200D.L3G4200D()
+        self.l3g.enableDefault()
         self.bmp = BMP085.BMP085()
         self.gps = GPS.GPS()
 
@@ -108,15 +110,15 @@ class McHab2012:
                 self.gps_file.write(line+"\n")
                 data=line.split(',')
                 if(data[0]=='$GPGGA'):
-                    coord = [data[2], data[4]]
-                    if(data[6]=='1' and self.locked==False):
-                        self.initialPosition = coord
-                        self.locked = True
-                        print "We get signal! We're at: " + str(self.initialPosition)
-                    if(self.locked):
-                        if( coord[0] > NSEW[0] or coord[0] < NSEW[1] or coord[1] < NSEW[2] or coord[1] > NSEW[3] ):
-                            self.boundary_cutdown=True
-
+                    if(len(data)==15):
+                        coord = [data[2], data[4]]
+                        if(data[6]=='1' and self.locked==False):
+                            self.initialPosition = coord
+                            self.locked = True
+                            print "We get signal! We're at: " + str(self.initialPosition)
+                        if(self.locked):
+                            if( coord[0] > NSEW[0] or coord[0] < NSEW[1] or coord[1] < NSEW[2] or coord[1] > NSEW[3] ):
+                                self.boundary_cutdown=True
 
             self.previous_GPS_read = self.current_time
 
