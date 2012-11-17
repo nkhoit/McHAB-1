@@ -73,7 +73,7 @@ class McHab2012:
         self.gps = GPS.GPS()
 
         #Create log files
-        newpath = './log/'+datetime.datetime.utcnow().strftime("%Y-%m-%d-%H%M%S")
+        newpath = './log'
         if not os.path.exists(newpath):
             os.makedirs(newpath)
         self.imu_file = open(newpath+"/IMUData.txt","w")
